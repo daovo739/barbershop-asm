@@ -4,6 +4,7 @@
  */
 package model;
 
+
 /**
  *
  * @author Admin
@@ -63,7 +64,7 @@ public class Product {
     }
 
     public double getPrice() {
-        return price;
+        return Math.round(price*100.0)/100.0;
     }
 
     public void setPrice(double price) {

@@ -48,4 +48,21 @@ public class ProductsDAO {
         }
         return null;
     }
+    
+     public ArrayList<String> getCategories(){
+        ArrayList<String> categories = new ArrayList<>();
+        try {
+            String sql = "select DISTINCT category from products";
+            rs = stm.executeQuery(sql);
+            categories.add("All Products");
+            while(rs.next()){
+                String category = rs.getString(1);
+                categories.add(category);
+            }    
+            return categories;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

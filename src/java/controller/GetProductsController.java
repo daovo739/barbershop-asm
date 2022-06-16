@@ -70,7 +70,10 @@ public class GetProductsController extends HttpServlet {
                 request.setAttribute("msg", "Product List Is Empty");
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
+            int numOfProducts = (int) (products.size()%3 == 0 ? products.size()/3 : Math.floor(products.size()/3) + 1);
             session.setAttribute("products", products);
+            session.setAttribute("numOfProducts", numOfProducts);
+            session.setAttribute("categories", db.getCategories());
             response.sendRedirect("index.jsp");
         } catch (SQLException ex) {
             Logger.getLogger(GetProductsController.class.getName()).log(Level.SEVERE, null, ex);
