@@ -22,7 +22,7 @@ import model.Product;
  *
  * @author Admin
  */
-public class GetProductsController extends HttpServlet {
+public class GetProductsHomeServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -65,7 +65,7 @@ public class GetProductsController extends HttpServlet {
         HttpSession session = request.getSession();
         try {
             ProductsDAO db = new ProductsDAO();
-            ArrayList<Product> products = db.getProducts();
+            ArrayList<Product> products = db.getRandomProducts();
             if(products == null){
                 request.setAttribute("msg", "Product List Is Empty");
                 request.getRequestDispatcher("index.jsp").forward(request, response);
@@ -76,7 +76,7 @@ public class GetProductsController extends HttpServlet {
             session.setAttribute("categories", db.getCategories());
             response.sendRedirect("index.jsp");
         } catch (SQLException ex) {
-            Logger.getLogger(GetProductsController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GetProductsHomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
