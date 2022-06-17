@@ -12,8 +12,8 @@
         <title>JSP Page</title>
     </head>
     <body class="d-flex flex-column min-vh-100">
-        <footer class="w-100  border-top mt-auto">
-            <div class="container d-flex flex-wrap justify-content-between align-items-center " style="padding: 12px">
+        <footer class="w-100 mt-auto">
+            <div class="container d-flex flex-wrap justify-content-between align-items-center   border-top" style="padding: 12px">
                 <p class="col-md-4 mb-0 text-muted">© 2022 | Make by VVD | DE160035</p>
                 <a class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark"   href="#"><img src="./static/images/logo/logo.png" style="width: 100px"></a>
                 <ul class="nav col-md-4 justify-content-end flex-column align-items-center">

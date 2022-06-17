@@ -12,6 +12,10 @@
         <servlet-name>FilterServlet</servlet-name>
         <servlet-class>controller.FilterServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetSingleProduct</servlet-name>
+        <servlet-class>controller.GetSingleProduct</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GetProductsHomeServlet</servlet-name>
         <url-pattern>/GetProductsHomeServlet</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>FilterServlet</servlet-name>
         <url-pattern>/search</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetSingleProduct</servlet-name>
+        <url-pattern>/product</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

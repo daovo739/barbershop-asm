@@ -18,10 +18,10 @@
     </head>
     <body>
         <jsp:include page="layout/navbarProducts.jsp"/>
-        <main>
+        <main >
             <section class="container; border: none">
                 <div class="row">
-                    <form class="col-lg-2 filters" action="">
+                    <div class="col-lg-2 filters" style="border-right: 1px solid #FCFDFB" >
                         <div class="input-group mb-3  bg-dark text-white">
                             <input type="text" class="form-control" name="filter-search" placeholder="Search here!!" aria-label="Recipient's username" aria-describedby="basic-addon2" oninput="searchList(this.value)">
                         </div>
@@ -33,30 +33,32 @@
                                 </c:forEach>
                             </ul>
                         </div>
-                        <div class="filter-price">
+                        <div class="filter-price d-flex flex-column">
                             <h2 class="text-white">Price</h2>
-                            <label for="customRange2" class="form-label text-white" id="value-range"></label>
-                            <input type="range" class="form-range" min="1" max="100" id="customRange2" oninput="showValue(this.value)">
+                            <a class="btn btn-secondary " href="products?category=${category}&sort=asc" role="button">Ascending</a>
+                            <a class="btn btn-secondary mt-2" href="products?category=${category}&sort=dsc" role="button">Descending</a>
+                            <a class="btn btn-secondary mt-2" href="products?category=${category}" role="button">Unfiltered</a>
                         </div>
-                    </form>
+                    </div>
                     <div class="col-lg-10">
                         <div class="row products-list gy-5">
                             <c:forEach items="${products}" var="product">
                                 <div class="col-lg-3 d-flex align-items-stretch" style="width: 15rem">
                                     <a href="product?id=${product.getId()}" class="card bg-dark" style="width:100%; text-decoration: none;">
-                                        <img src="${product.getImgLink()}" class="card-img-top img-thumbnail" alt="..." >
-                                        <div class="card-body">
+                                        <img src="${product.getImgLink()}" class="card-img-top img-thumbnail" alt="..." >            
+                                        <div class="card-body d-flex flex-column justify-content-between">
                                             <h6 class="card-subtitle mb-2 text-muted text-center text-capitalize" style="font-size: 10px">${product.getBrand()}</h6>
                                             <h5 class="card-title text-capitalize text-center text-white" style="font-size: 14px">${product.getName()}</h5>
                                             <h5 class="card-text text-capitalize text-center text-white-50" style="font-size: 20px">$${product.getPrice()}</h5>
                                         </div>
+                                        <div class="card-view">View product</div>
                                     </a>
                                 </div> 
                             </c:forEach> 
 
                         </div>
-                        <nav aria-label="Page navigation example " style="margin-top: 20px" class="d-flex justify-content-center">
-                            <ul class="pagination ">
+                        <nav aria-label="Page navigation example " style="margin-top: 20px" class="d-flex justify-content-center" id="pagination-container">
+                            <ul class="pagination">
                                 <li class="page-item">
                                     <a class="page-link bg-dark text-white" href="products?category=${category}&page=${prevPage}" aria-label="Previous">
                                         <span aria-hidden="true">&laquo;</span>
@@ -84,27 +86,10 @@
     </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script >
-        const showValue = (value) => {
-            document.getElementById("value-range").textContent = '$0 - $' + value;
-            $.ajax({
-                url: "/barbershop/search",
-                type: "GET",
-                cache: false,
-                data: {
-                    price: value
-                },
-                success: function (results) {
-                    document.querySelector(".products-list").innerHTML = results;
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        };
-
-
         const searchList = (value) => {
-            $.ajax({
+            const pagination = document.querySelector("#pagination-container");
+             if (value) {
+                 $.ajax({
                 url: "/barbershop/search",
                 type: "GET",
                 cache: false,
@@ -118,6 +103,11 @@
                     console.log(error);
                 }
             });
+                pagination.classList.add('d-none');
+            } else {
+                pagination.classList.remove('d-none');
+            }
+            
         };
     </script>
 </html>

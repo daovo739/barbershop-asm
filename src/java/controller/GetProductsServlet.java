@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -69,7 +71,26 @@ public class GetProductsServlet extends HttpServlet {
             ArrayList<Product> products = db.getProducts(category);
             int limit = 8, page = 1;
             if (request.getParameter("page") != null) { 
-                page = Integer.parseInt(request.getParameter("page")); 
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+            if (request.getParameter("sort") != null) {
+                String sort = request.getParameter("sort");
+                if (sort.equals("asc")) {
+                    Collections.sort(products, new Comparator<Product>() {
+                        @Override
+                        public int compare(Product o1, Product o2) {
+                            return (int) (o1.getPrice() - o2.getPrice());
+                        }
+                    });       
+                }
+                 if (sort.equals("dsc")) {
+                    Collections.sort(products, new Comparator<Product>() {
+                        @Override
+                        public int compare(Product o1, Product o2) {
+                            return (int) (o2.getPrice() - o1.getPrice());
+                        }
+                    });       
+                }
             }
             int totalPage;
             int totalRow = products.size();

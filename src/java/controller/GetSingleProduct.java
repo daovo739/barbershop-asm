@@ -8,20 +8,20 @@ import DAO.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.Product;
 
 /**
  *
  * @author HHPC
  */
-public class FilterServlet extends HttpServlet {
+public class GetSingleProduct extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +40,10 @@ public class FilterServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FilterServlet</title>");
+            out.println("<title>Servlet GetSingleProduct</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FilterServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet GetSingleProduct at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,36 +61,20 @@ public class FilterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
-        ArrayList<Product> products = null;
+        HttpSession session = request.getSession();
         try {
+            int id = Integer.parseInt(request.getParameter("id"));
             ProductsDAO db = new ProductsDAO();
-            String priceString = request.getParameter("price");
-            if (priceString != null) {
-                products = db.getProductsSearchingByPrice(Double.parseDouble(priceString));
-            } else {
-                String search = request.getParameter("search");
-                products = db.getProductsSearching(search);
+            Product product = db.getProductById(id);
+            if (product == null) {
+                request.setAttribute("msg", "Not found this product");
+                request.getRequestDispatcher("product.jsp").forward(request, response);
             }
-            if (products != null) {
-                for (Product product : products) {
-                    out.println("<div class=\"col-lg-3 d-flex align-items-stretch\" style=\"width: 15rem\">\n"
-                            + "                                    <a href=\"product?id=" + product.getId() + "\" class=\"card bg-dark\" style=\"width:100%; text-decoration: none;\">\n"
-                            + "                                        <img src=\"" + product.getImgLink() + "\" class=\"card-img-top img-thumbnail\" alt=\"...\" >\n"
-                            + "                                        <div class=\"card-body\">\n"
-                            + "                                            <h6 class=\"card-subtitle mb-2 text-muted text-center text-capitalize\" style=\"font-size: 10px\">" + product.getBrand() + "</h6>\n"
-                            + "                                            <h5 class=\"card-title text-capitalize text-center text-white\" style=\"font-size: 12px\">" + product.getName() + "</h5>\n"
-                            + "                                            <h5 class=\"card-text text-capitalize text-center text-white-50\" style=\"font-size: 20px\">$" + product.getPrice() + "</h5>\n"
-                            + "                                        </div>\n"
-                            + "                                    </a>\n"
-                            + "                                </div> ");
-                }
-            }
-
+            session.setAttribute("product", product);
+            response.sendRedirect("product.jsp");
         } catch (SQLException ex) {
-            Logger.getLogger(FilterServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GetSingleProduct.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     /**
@@ -104,7 +88,7 @@ public class FilterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 
     /**

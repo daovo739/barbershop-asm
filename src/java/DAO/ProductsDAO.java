@@ -159,4 +159,23 @@ public class ProductsDAO {
         }
         return null;
     }
+     
+     public Product getProductById(int id){
+      try {
+                String sql = "SELECT * FROM products WHERE id = " + id;
+            rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                String name = rs.getString(2);
+                String brand = rs.getString(3);
+                double price = rs.getDouble(4);
+                String imgLink = rs.getString(5);
+                String available = rs.getString(6);
+                String category = rs.getString(7);
+                return new Product(id, name, brand, imgLink, available, category, price);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+     }
 }
