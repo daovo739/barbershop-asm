@@ -32,8 +32,8 @@
                             </li>
                         </ul>
                         <div class="d-flex">
-                            <a class="btn btn-success" href="#" role="button" style="margin-right: 5px">Sign In</a>
-                            <a class="btn btn-secondary" href="#" role="button">Sign Up</a>
+                            <a class="btn btn-success" href="login.jsp" role="button" style="margin-right: 5px">Sign In</a>
+                            <a class="btn btn-secondary" href="register.jsp" role="button">Sign Up</a>
                         </div>
                     </div>
                 </div>

@@ -38,7 +38,7 @@
                                     <h3>$${product.getPrice()}</h3>
                                 </div>
                                 <form action="" class="d-flex w-50 justify-content-between mt-3" >
-                                    <input type="number" name="quantity" value="1" style="width: 70px; text-align: center">
+                                    <input type="number" name="quantity" min="1" value="1" style="width: 70px; text-align: center">
                                     <input type="submit" class="form-control btn-secondary w-75 rounded-pill" id="formGroupExampleInput" value="Add To Cart" required="">
                                 </form>
                                 <div class="mt-3">

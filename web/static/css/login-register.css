@@ -1,0 +1,101 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.form-login{
+    box-shadow: 6px 5px 4px #333;
+    padding: 48px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 32%;
+    min-height:512px;
+}
+
+.logo-login{
+    width: 80px;
+    height: 80px;
+    background: #0062c2;
+    border-radius: 50%;
+    display:grid;
+    place-items: center;
+    margin-bottom: 10px;    
+}
+
+.logo-login span{
+    font-size: 30px;
+
+}
+
+.box{
+    min-height: 230px;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-top: 10px;
+}
+
+
+.box > *, .register-login > button{
+    padding: 6px 12px;
+    border: none;
+    outline: none;
+    min-height: 52px;
+    border-radius: 4px 5px 5px 4px;
+    cursor: pointer;
+    transition: all .3s linear;
+}
+
+button{
+    background: #0062c2;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+input:focus{
+    color: #333;
+    border: 2px solid #0062c2;
+}
+
+button:hover{
+    background: #083868;
+}
+
+.register-login{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.register-login p{
+    font-size: 12px;
+}
+
+.link{
+    text-decoration: none;
+    color: #0062c2;
+    transition: all .3s linear;
+}
+
+.link:hover{
+    color: #083868;
+}
+
+#error{
+    font-size: 14px;
+    text-align: center;
+    color: red;
+    margin-top: 5px;
+}
+
+/*// =================== REGISTER ===============//*/
+.box-register{
+    min-height: 400px;
+}

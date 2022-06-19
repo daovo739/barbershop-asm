@@ -4,24 +4,18 @@
  */
 package controller;
 
-import DAO.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import model.Product;
 
 /**
  *
  * @author HHPC
  */
-public class GetSingleProduct extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +34,10 @@ public class GetSingleProduct extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet GetSingleProduct</title>");            
+            out.println("<title>Servlet RegisterServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet GetSingleProduct at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,20 +55,7 @@ public class GetSingleProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        try {
-            int id = Integer.parseInt(request.getParameter("id"));
-            ProductsDAO db = new ProductsDAO();
-            Product product = db.getProductById(id);
-            if (product == null) {
-                request.setAttribute("msg", "Not found this product");
-            
-            }
-            request.setAttribute("product", product);
-            request.getRequestDispatcher("product.jsp").forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(GetSingleProduct.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -88,7 +69,24 @@ public class GetSingleProduct extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("msg", "Invalid register, try again");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+        } else {
+            User user = new User(name, email, userName, password);
+            UserDAO userDAO = new UserDAO();
+            if (!userDAO.registerUser(user)){
+                request.setAttribute("msg", "Username is exsited");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+            }
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }
+
     }
 
     /**

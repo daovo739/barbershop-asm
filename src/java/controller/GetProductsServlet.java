@@ -17,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.Product;
 
 /**
@@ -65,8 +64,18 @@ public class GetProductsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            String category = (String) request.getParameter("category").toLowerCase();
+            String category;
+            ArrayList<String> filtering = new ArrayList<>();
+            if (request.getParameter("category") != null) {
+                category = (String) request.getParameter("category").toLowerCase();
+                if (!category.equalsIgnoreCase("all")) {
+                    filtering.add(category);
+                }
+            } else {
+                category = "all";
+                ;
+            }
+
             ProductsDAO db = new ProductsDAO();
             ArrayList<Product> products = db.getProducts(category);
             int limit = 8, page = 1;
@@ -75,13 +84,15 @@ public class GetProductsServlet extends HttpServlet {
             }
             if (request.getParameter("sort") != null) {
                 String sort = request.getParameter("sort");
+                String sortFiltering = null;
                 if (sort.equals("asc")) {
                     Collections.sort(products, new Comparator<Product>() {
                         @Override
                         public int compare(Product o1, Product o2) {
                             return (int) (o1.getPrice() - o2.getPrice());
                         }
-                    });       
+                    });    
+                    sortFiltering = "ascending";
                 }
                  if (sort.equals("dsc")) {
                     Collections.sort(products, new Comparator<Product>() {
@@ -89,8 +100,11 @@ public class GetProductsServlet extends HttpServlet {
                         public int compare(Product o1, Product o2) {
                             return (int) (o2.getPrice() - o1.getPrice());
                         }
-                    });       
+                    });  
+                     sortFiltering = "descending";
                 }
+                 request.setAttribute("sort", sort);
+                 filtering.add(sortFiltering);
             }
             int totalPage;
             int totalRow = products.size();
@@ -108,20 +122,22 @@ public class GetProductsServlet extends HttpServlet {
             }
             if (products == null) {
                 request.setAttribute("msg", "Product List Is Empty");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+                request.getRequestDispatcher("products.jsp").forward(request, response);
             }
             int prevPage = page -1;
             int nextPage = page + 1;
             prevPage = prevPage == 0 ? totalPage : prevPage;
             nextPage = nextPage > totalPage ? 1 : nextPage;            
-            session.setAttribute("products", newProducts);
-            session.setAttribute("totalPage", totalPage);
-            session.setAttribute("categories", db.getCategories());
-            session.setAttribute("category", category);
-            session.setAttribute("nextPage", nextPage);
-            session.setAttribute("prevPage", prevPage);
-            session.setAttribute("pageCurrent", page);
-            response.sendRedirect("products.jsp");
+            request.setAttribute("products", newProducts);
+            request.setAttribute("totalPage", totalPage);
+            request.setAttribute("categories", db.getCategories());
+            request.setAttribute("category", category);
+            request.setAttribute("nextPage", nextPage);
+            request.setAttribute("prevPage", prevPage);
+            request.setAttribute("pageCurrent", page);
+            request.setAttribute("filtering", filtering);
+            request.getRequestDispatcher("products.jsp").forward(request, response);
+//            response.sendRedirect("products.jsp");
         } catch (SQLException ex) {
             Logger.getLogger(GetProductsHomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
