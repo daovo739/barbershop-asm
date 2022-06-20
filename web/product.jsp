@@ -17,8 +17,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <jsp:include page="layout/navbarProducts.jsp"/>
-        <main style="height: calc(100vh - 126px - 125px)">
+        <jsp:include page="layout/navbar.jsp"/>
+        <main style="min-height: calc(100vh - 126px - 125px)">
             <section class="container" >
                 <c:if test="${not empty msg}">
                     <h1 class="text-center text-white" >${msg}</h1>
@@ -38,7 +38,7 @@
                                     <h3>$${product.getPrice()}</h3>
                                 </div>
                                 <form action="" class="d-flex w-50 justify-content-between mt-3" >
-                                    <input type="number" name="quantity" min="1" value="1" style="width: 70px; text-align: center">
+                                    <input type="number" name="quantity" min="1" value="1" style="width: 50px; text-align: center">
                                     <input type="submit" class="form-control btn-secondary w-75 rounded-pill" id="formGroupExampleInput" value="Add To Cart" required="">
                                 </form>
                                 <div class="mt-3">

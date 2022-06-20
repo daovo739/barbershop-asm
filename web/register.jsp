@@ -20,13 +20,13 @@
     </head>
     <body>
         <jsp:include page="layout/navbarNotFixed.jsp"/>
-        <main style="height: calc(100vh - 126px - 125px)">
+        <main style="min-height: calc(100vh - 126px - 125px)">
             <section class="form-login">
                 <div class="logo-login "><span class="material-symbols-outlined">
                         app_registration
                     </span></div>
                 <h2 class="text-white">Register</h2>
-                <form action="RegisterServlet" method="POST" class="box box-register">
+                <form action="register" method="POST" class="box box-register">
                     <input type="text" name="name" class="name"
                            id="name" placeholder="Enter your name" />
 

@@ -4,6 +4,7 @@
  */
 package controller;
 
+import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import model.User;
 
 /**
  *
@@ -56,7 +59,17 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("userName")) {
+                    session.setAttribute("landingPage", "home");
+                    response.sendRedirect("index.jsp");
+                }
+            }
+        }
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     /**
@@ -80,11 +93,10 @@ public class LoginServlet extends HttpServlet {
             Cookie userCookie = new Cookie("userName", userName);
             userCookie.setMaxAge(60*60*24);
             response.addCookie(userCookie);
-            request.setAttribute("userName", userName);
-            request.getRequestDispatcher("homePage.jsp").forward(request, response);
+            response.sendRedirect("index.jsp");
         } else {
             request.setAttribute("msg", "User name or password is incorrect");
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
 

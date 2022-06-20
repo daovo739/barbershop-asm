@@ -25,7 +25,7 @@
                 <div class="logo-login"><span class="material-symbols-outlined">person
                     </span></div>
                 <h2 class="text-white">Sign In</h2>
-                <form action="LoginServlet" method="POST" class="box ">
+                <form action="login" method="POST" class="box ">
                     <input type="text" name="userName" id="userName"
                            placeholder="Username""/>
                     <input type="password" name="password" id="password"

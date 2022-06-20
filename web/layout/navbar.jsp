@@ -13,7 +13,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <c:if test="${landingPage != 'products'}">
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            </c:if>
+            <c:if test="${landingPage == 'products'}">
+                <nav class="navbar navbar-expand-lg navbar-dark">
+                </c:if>
                 <div class="container">
                     <a class="navbar-brand"   href="#"><img src="./static/images/logo/logo.png" style="width: 100px"></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
