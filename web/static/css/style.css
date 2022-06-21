@@ -149,3 +149,9 @@ section{
 transform: scale(1.2);
 }
 
+.btn-sidebar:focus{
+    outline: none !important;
+    box-shadow: none !important;
+    border:none !important;
+}
+
