@@ -59,16 +59,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("userName")) {
-                    session.setAttribute("userLogin", cookie.getValue());
-                }
-            }
-        }
-         response.sendRedirect("GetProductsHomeServlet");
+
     }
 
     /**
@@ -90,7 +81,9 @@ public class LoginServlet extends HttpServlet {
             Cookie userCookie = new Cookie("userName", userName);
             userCookie.setMaxAge(60*60*24);
             response.addCookie(userCookie);
-            request.getSession().setAttribute("userLogin", user.getUserName());
+            Cookie idCookie = new Cookie("userId", Integer.toString(userDAO.getUserIdByUsername(userName)));
+            userCookie.setMaxAge(60*60*24);
+            response.addCookie(idCookie);
             request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
         } else {
             request.setAttribute("msg", "User name or password is incorrect");

@@ -82,11 +82,13 @@ public class RegisterServlet extends HttpServlet {
         } else {
             User user = new User(name, email, userName, password);
             UserDAO userDAO = new UserDAO();
-            if (!userDAO.registerUser(user)){
+            if (!userDAO.registerUser(user)) {
                 request.setAttribute("msg", "Username is exsited");
                 request.getRequestDispatcher("register.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+
         }
 
     }

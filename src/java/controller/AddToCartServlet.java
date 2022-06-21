@@ -4,13 +4,18 @@
  */
 package controller;
 
+import DAO.CartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Item;
 
 /**
  *
@@ -56,18 +61,31 @@ public class AddToCartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        Cookie[] cookies = request.getCookies();
-        boolean isHaveCooky = false;
-        for (Cookie cooky : cookies) {
-            if (cooky.getName().equals("userName")) {
-                isHaveCooky = true;
-                break;
+        try {
+            int userId = 0;
+            Cookie[] cookies = request.getCookies();
+            boolean isHaveCooky = false;
+            for (Cookie cooky : cookies) {
+                if (cooky.getName().equals("userId")) {
+                    userId = Integer.parseInt(cooky.getValue());
+                    isHaveCooky = true;
+                    break;
+                }
             }
-        }
-        if (!isHaveCooky) {
-            request.setAttribute("msg", "Please login before shopping");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            if (!isHaveCooky) {
+                request.setAttribute("msg", "Please login before shopping");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
+            int quantity = 1;
+            if (request.getParameter("quantity") != null){
+                quantity = Integer.parseInt(request.getParameter("quantity"));
+            }
+            int productId = Integer.parseInt(request.getParameter("id"));
+            Item item = new Item(userId, quantity, productId);
+            CartDAO cartDAO = new CartDAO();
+            cartDAO.insertCart(item);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
         /**

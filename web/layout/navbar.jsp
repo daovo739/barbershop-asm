@@ -61,7 +61,7 @@
                             <div class="nav-item dropdown">
                                 <div class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="material-symbols-outlined" style="color: green; font-size: 30px">account_circle</span>
-                                    <a class="nav-link text-white fs-4"  href="#">${userLogin} </a>
+                                    <a class="nav-link text-white fs-4"  href="#">${cookie.userName.value} </a>
                                 </div>
                                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" href="#">View your cart</a></li>
@@ -71,11 +71,17 @@
                                                 logout</span> Sign Out</a> </li>
                                 </ul>
                             </div>
-                            <button class="btn btn-sidebar" type="button" data-bs-toggle="offcanvas" 
-                                    data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                                <span class="material-symbols-outlined" style="color: #F9F2ED; font-size: 30px">
-                                    shopping_cart
-                                </span></button>
+                            <div class="cart-icon-container">
+                                <button class="btn btn-sidebar" type="button" data-bs-toggle="offcanvas" 
+                                        data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                                    <span class="material-symbols-outlined" style="color: #F9F2ED; font-size: 40px"> shopping_cart</span>
+                                </button>
+                                <div class="text-white text-center cart-count">
+                                    <p class="w-100 h-100">0</p>
+                                </div>
+
+                            </div>
+
                         </div>
 
                     </c:if>

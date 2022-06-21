@@ -155,3 +155,23 @@ transform: scale(1.2);
     border:none !important;
 }
 
+/*CART-ICON-CONTAINER*/
+.cart-icon-container{
+    position: relative;
+}
+
+.cart-count{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: green;
+}
+
+/*SETUP AGAIN DROPDOWN MENU*/
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0; 
+ }

@@ -26,6 +26,9 @@ public class UserDAO {
     }
 
     public boolean registerUser(User user) {
+          if (user.getUserName().equalsIgnoreCase("admin")){
+            return false;
+        }
         String sql = "INSERT INTO users (name, email,userName, password) VALUES (?, ?,?,?);";
 
         try {
@@ -43,16 +46,29 @@ public class UserDAO {
     
     public boolean checkLogin(User user) {
         try {
-            String sql = "Select * from users where userName=? and password=?";
+            String sql = "Select * from users where userName = ? and password = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getPassword());
             ResultSet rs = statement.executeQuery();
-
             return rs.next();
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
              return false;
+        }
+    }
+    
+    public int getUserIdByUsername(String userName) {
+        try {
+            String sql = "Select user_id from users where userName = ? ";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, userName);
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+             return -1;
         }
     }
 }

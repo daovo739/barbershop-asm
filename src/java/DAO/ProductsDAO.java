@@ -150,7 +150,7 @@ public class ProductsDAO {
      
      public Product getProductById(int id){
       try {
-                String sql = "SELECT * FROM products WHERE id = " + id;
+                String sql = "SELECT * FROM products WHERE product_id = " + id;
             rs = stm.executeQuery(sql);
             while (rs.next()) {
                 String name = rs.getString(2);
@@ -166,4 +166,18 @@ public class ProductsDAO {
         }
         return null;
      }
+     
+     public double getPriceByName(String name){
+     try {
+                String sql = "select price from products where name  = " + name;
+             rs = stm.executeQuery(sql);
+             rs.next();
+             return rs.getDouble(1);
+         } catch (SQLException ex) {
+             Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        return 0;
+     }
+     
+//     public boolean insertToCart()
 }
