@@ -64,12 +64,11 @@ public class LoginServlet extends HttpServlet {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("userName")) {
-                    session.setAttribute("landingPage", "home");
-                    response.sendRedirect("index.jsp");
+                    session.setAttribute("userLogin", cookie.getValue());
                 }
             }
         }
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+         response.sendRedirect("GetProductsHomeServlet");
     }
 
     /**
@@ -87,13 +86,12 @@ public class LoginServlet extends HttpServlet {
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
         User user = new User(userName,password);
-        String sql = "Select * from users where userName= " + user.getName() + "and password = " + user.getPassword();
-        System.out.println(sql);
         if (userDAO.checkLogin(user)) {
             Cookie userCookie = new Cookie("userName", userName);
             userCookie.setMaxAge(60*60*24);
             response.addCookie(userCookie);
-            response.sendRedirect("index.jsp");
+            request.getSession().setAttribute("userLogin", user.getUserName());
+            request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
         } else {
             request.setAttribute("msg", "User name or password is incorrect");
             request.getRequestDispatcher("login.jsp").forward(request, response);

@@ -37,7 +37,8 @@
                                     <h4 class="fst-italic text-capitalize" style="letter-spacing: 2px">${product.getName()}</h4>
                                     <h3>$${product.getPrice()}</h3>
                                 </div>
-                                <form action="" class="d-flex w-50 justify-content-between mt-3" >
+                                <form action="addToCart" class="d-flex w-50 justify-content-between mt-3" >
+                                    <input type="text" value="${product.getId()}" name="id" hidden="true"/>
                                     <input type="number" name="quantity" min="1" value="1" style="width: 50px; text-align: center">
                                     <input type="submit" class="form-control btn-secondary w-75 rounded-pill" id="formGroupExampleInput" value="Add To Cart" required="">
                                 </form>

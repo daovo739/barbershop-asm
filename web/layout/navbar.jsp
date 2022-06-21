@@ -11,6 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     </head>
     <body>
         <c:set var="classNav" value="navbar navbar-expand-lg navbar-dark fixed-top"></c:set>
@@ -49,10 +50,23 @@
                                 <a class="nav-link" href="index.jsp#about">About</a>
                             </li>
                         </ul>
-                        <div class="d-flex">
+                    <c:if test="${not cookie.containsKey('userName')}">
+                       <div class="d-flex">
                             <a class="btn btn-success" href="login.jsp" role="button" style="margin-right: 5px">Sign In</a>
                             <a class="btn btn-secondary" href="register.jsp" role="button">Sign Up</a>
                         </div>
+                    </c:if>
+                    <c:if test="${cookie.containsKey('userName')}">
+                        <div class="d-flex  align-items-center">
+                            <div class="d-flex align-items-center justify-content-evenly">
+                                <span class="material-symbols-outlined" style="color: green">account_circle</span>
+                                <a class="  nav-link text-white fs-4"  href="#"> ${userLogin} </a>
+                            </div>
+
+                            <a class="btn btn-danger nav-link d-flex text-white" href="logout"><span class="material-symbols-outlined">
+                                    logout</span> Sign Out</a>
+                        </div>
+                    </c:if>
                     </div>
                 </div>
             </nav>

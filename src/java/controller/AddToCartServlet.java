@@ -4,20 +4,19 @@
  */
 package controller;
 
-import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.User;
 
 /**
  *
  * @author HHPC
  */
-public class RegisterServlet extends HttpServlet {
+public class AddToCartServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +35,10 @@ public class RegisterServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");            
+            out.println("<title>Servlet AddToCartServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddToCartServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,10 +56,21 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
 
-    /**
+        Cookie[] cookies = request.getCookies();
+        boolean isHaveCooky = false;
+        for (Cookie cooky : cookies) {
+            if (cooky.getName().equals("userName")) {
+                isHaveCooky = true;
+                break;
+            }
+        }
+        if (!isHaveCooky) {
+            request.setAttribute("msg", "Please login before shopping");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        }
+    }
+        /**
      * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request
@@ -71,24 +81,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
-        if (!password.equals(confirmPassword)) {
-            request.setAttribute("msg", "Invalid register, try again");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-        } else {
-            User user = new User(name, email, userName, password);
-            UserDAO userDAO = new UserDAO();
-            if (!userDAO.registerUser(user)){
-                request.setAttribute("msg", "Username is exsited");
-                request.getRequestDispatcher("register.jsp").forward(request, response);
-            }
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        }
-
+        processRequest(request, response);
     }
 
     /**

@@ -66,7 +66,6 @@ public class GetProductsHomeServlet extends HttpServlet {
         try {
             ProductsDAO db = new ProductsDAO();
             ArrayList<Product> products = db.getRandomProducts();
-            session.setAttribute("landingPage", "home");
             if(products == null){
                 request.setAttribute("msg", "Product List Is Empty");
                 request.getRequestDispatcher("index.jsp").forward(request, response);

@@ -41,7 +41,7 @@
                         <div class="filter-price d-flex flex-column">
                             <h2 class="text-white">Price</h2>
                             <a class="btn btn-secondary " href="products?category=${category}&sort=asc" role="button">Ascending</a>
-                            <a class="btn btn-secondary mt-2" href="products?category=${category}&sort=dsc" role="button">Descending</a>
+                            <a class="btn btn-secondary mt-2" href="products?category=${category}&sort=desc" role="button">Descending</a>
                         </div>
                         <c:if test="${not empty filtering}">
                             <div class="fiter-fitering d-flex flex-column mt-3">
@@ -56,67 +56,35 @@
                         <a class="btn btn-danger mt-2 w-100 text-uppercase" href="products" role="button">Unfiltered</a>
                     </div>
                     <div class="col-lg-10">
-                        <div class="row products-list gy-5">
+                        <c:if test="${empty msg}">
+                            <div class="row products-list gy-5">
                             <c:forEach items="${products}" var="product">
                                 <div class="col-lg-3 d-flex align-items-stretch" style="width: 15rem">
                                     <a href="product?id=${product.getId()}" class="card bg-dark" style="width:100%; text-decoration: none;">
-                                        <img src="${product.getImgLink()}" class="card-img-top img-thumbnail" alt="..." >            
+                                        <div class="card-view-container">
+                                            <img src="${product.getImgLink()}" class="card-img-top img-thumbnail" alt="..." >  
+                                             <div class="card-view">View product</div>    
+                                        </div>                                         
                                         <div class="card-body d-flex flex-column justify-content-between">
                                             <h6 class="card-subtitle mb-2 text-muted text-center text-capitalize" style="font-size: 10px">${product.getBrand()}</h6>
                                             <h5 class="card-title text-capitalize text-center text-white" style="font-size: 14px">${product.getName()}</h5>
                                             <h5 class="card-text text-capitalize text-center text-white-50" style="font-size: 20px">$${product.getPrice()}</h5>
                                         </div>
-                                        <div class="card-view">View product</div>
+                                        <form action="addToCart?" class="d-flex justify-content-center">
+                                            <input type="text" value="${product.getId()}" name="id" hidden="true"/>
+                                            <input  type="submit" class="btn btn-primary mb-3 text-white w-100" style="max-width: 75%" value="Add to cart"/>
+                                        </form>
                                     </a>
                                 </div> 
                             </c:forEach> 
-
                         </div>
-                        <nav aria-label="Page navigation example " style="margin-top: 20px" class="d-flex justify-content-center" id="pagination-container">
-                            <ul class="pagination">
-                                <c:if test="${not empty sort}">
-                                    <li class="page-item">
-                                        <a class="page-link bg-dark text-white" href="products?category=${category}&page=${prevPage}&sort=${sort}" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                    <c:forEach begin="${1}" end="${totalPage}" var="i">
-                                        <c:if test = "${i == pageCurrent}">
-                                            <li class="page-item active"><a class="page-link bg-dark text-white" href="products?category=${category}&page=${i}&sort=${sort}">${i}</a></li>
-                                            </c:if>
-                                            <c:if test = "${i != pageCurrent}">
-                                            <li class="page-item"><a class="page-link bg-dark text-white" href="products?category=${category}&page=${i}&sort=${sort}">${i}</a></li>
-                                            </c:if>
-                                        </c:forEach>
-                                    <li class="page-item">
-                                        <a class="page-link bg-dark text-white" href="products?category=${category}&page=${nextPage}&sort=${sort}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </c:if>
-                            <c:if test="${empty sort}">
-                                <li class="page-item">
-                                    <a class="page-link bg-dark text-white" href="products?category=${category}&page=${prevPage}" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <c:forEach begin="${1}" end="${totalPage}" var="i">
-                                    <c:if test = "${i == pageCurrent}">
-                                        <li class="page-item active"><a class="page-link bg-dark text-white" href="products?category=${category}&page=${i}">${i}</a></li>
-                                        </c:if>
-                                        <c:if test = "${i != pageCurrent}">
-                                        <li class="page-item"><a class="page-link bg-dark text-white" href="products?category=${category}&page=${i}">${i}</a></li>
-                                        </c:if>
-                                    </c:forEach>
-                                <li class="page-item">
-                                    <a class="page-link bg-dark text-white" href="products?category=${category}&page=${nextPage}" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                                </ul>
-                            </c:if>
-                        </nav>                                      
+                        </c:if>
+                        <h1 class="text-white text-center">${msg}</h1>
+                        <c:if test="${not empty msg}">
+                            
+                        </c:if>
+                        <!-------------Pagination---------------->
+                        <jsp:include page="layout/pagination.jsp"/>                                
                     </div>
                 </div>
             </section>
@@ -131,7 +99,6 @@
                 $.ajax({
                     url: "/barbershop/search",
                     type: "GET",
-                    cache: false,
                     data: {
                         search: value
                     },

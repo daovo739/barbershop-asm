@@ -61,8 +61,6 @@ public class GetSingleProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        session.setAttribute("landingPage", "products");
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             ProductsDAO db = new ProductsDAO();
