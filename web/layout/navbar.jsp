@@ -59,8 +59,8 @@
                     <c:if test="${cookie.containsKey('userName')}">
                         <div class="d-flex align-items-center justify-content-center">
                             <div class="nav-item dropdown">
-                                <div class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class="material-symbols-outlined" style="color: green">account_circle</span>
+                                <div class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="material-symbols-outlined" style="color: green; font-size: 30px">account_circle</span>
                                     <a class="nav-link text-white fs-4"  href="#">${userLogin} </a>
                                 </div>
                                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
@@ -73,7 +73,7 @@
                             </div>
                             <button class="btn btn-sidebar" type="button" data-bs-toggle="offcanvas" 
                                     data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                                <span class="material-symbols-outlined" style="color: yellow">
+                                <span class="material-symbols-outlined" style="color: #F9F2ED; font-size: 30px">
                                     shopping_cart
                                 </span></button>
                         </div>
