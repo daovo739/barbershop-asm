@@ -15,13 +15,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Item;
+import javax.servlet.http.HttpSession;
+import model.Cart;
 
 /**
  *
  * @author HHPC
  */
-public class AddToCartServlet extends HttpServlet {
+public class GetCartServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +41,10 @@ public class AddToCartServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddToCartServlet</title>");            
+            out.println("<title>Servlet GetCartServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddToCartServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet GetCartServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,35 +62,32 @@ public class AddToCartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        int userId = 0;
+        Cookie[] cookies = request.getCookies();
+        boolean isHaveCooky = false;
+        for (Cookie cooky : cookies) {
+            if (cooky.getName().equals("userId")) {
+                userId = Integer.parseInt(cooky.getValue());
+                break;
+            }
+        }
         try {
-            int userId = 0;
-            Cookie[] cookies = request.getCookies();
-            boolean isHaveCooky = false;
-            for (Cookie cooky : cookies) {
-                if (cooky.getName().equals("userId")) {
-                    userId = Integer.parseInt(cooky.getValue());
-                    isHaveCooky = true;
-                    break;
-                }
-            }
-            if (!isHaveCooky) {
-                request.setAttribute("msg", "Please login before shopping");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            }
-            int quantity = 1;
-            if (request.getParameter("quantity") != null){
-                quantity = Integer.parseInt(request.getParameter("quantity"));
-            }
-            int productId = Integer.parseInt(request.getParameter("id"));
-            Item item = new Item(userId, quantity, productId);
             CartDAO cartDAO = new CartDAO();
-            cartDAO.insertCart(item);
-            request.getRequestDispatcher("GetCartServlet").forward(request, response);
+            Cart cart = cartDAO.getCart(userId);
+            if(cart == null){
+                session.setAttribute("emptyCart", "Your cart is empty. Shopping now!");
+            }else{
+                session.removeAttribute("emptyCart");
+                session.setAttribute("cart", cart);
+            }
+            request.getRequestDispatcher("products").forward(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GetCartServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-        /**
+
+    /**
      * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request

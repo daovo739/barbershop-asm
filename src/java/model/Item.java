@@ -4,17 +4,23 @@
  */
 package model;
 
+import DAO.ProductsDAO;
+import java.sql.SQLException;
+
 /**
  *
  * @author HHPC
  */
 public class Item {
     private int userId, quantity, productId;
-
-    public Item(int userId, int quantity, int productId) {
+    Product product;
+    private double totalCost;
+    public Item(int userId, int quantity, int productId) throws SQLException {
+        ProductsDAO productsDAO = new ProductsDAO();
         this.userId = userId;
         this.quantity = quantity;
         this.productId = productId;
+        this.product = productsDAO.getProductById(productId);
     }
 
     public int getUserId() {
@@ -40,9 +46,22 @@ public class Item {
     public void setProductId(int productId) {
         this.productId = productId;
     }
-    
-    
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public double getTotalCost() {
+        return this.getProduct().getPrice() * this.getQuantity();
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
 
     
 }

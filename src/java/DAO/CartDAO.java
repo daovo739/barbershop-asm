@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Cart;
 import model.Item;
 /**
  *
@@ -25,22 +26,6 @@ public class CartDAO {
     public CartDAO() throws SQLException {
         conn = new ConnectDB().getConn();
         stm = conn.createStatement();
-    }
-    
-    public int getCurrentId(String table, String column){
-        try {
-            String sql = "select top 1 ? from ? order by ? desc";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, column);
-            ps.setString(2, table);
-            ps.setString(3, column);
-            rs = ps.executeQuery();
-            rs.next();
-            return rs.getInt(1);
-        } catch (SQLException ex) {
-            Logger.getLogger(CartDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
     }
     
     public boolean isExsist(int userId){
@@ -78,12 +63,15 @@ public class CartDAO {
         try {
             if (isExsist(userId)) {
                 int cartId = getCartIdByUserId(userId);
-                sql = "insert into cart_contains values(" + cartId + "," + productId + ","+quantity+")";
-                stm.executeUpdate(sql);
+                sql = "update cart_contains set quantity = " + quantity + " where product_id = " + productId + " and cart_id = " + cartId;
+                if (stm.executeUpdate(sql) <= 0) {
+                    sql = "insert into cart_contains values(" + cartId + "," + productId + "," + quantity + ")";
+                    stm.executeUpdate(sql);
+                }
             } else {
-                int cartId = getCurrentId("cart", "cart_id") + 1;
-                sql = "insert into cart values(" + cartId + "," + userId + ")";
+                sql = "insert into cart values(" + userId + ")";
                 stm.executeUpdate(sql);
+                 int cartId = getCartIdByUserId(userId);
                 sql = "insert into cart_contains values(" + cartId + "," + productId + ","+quantity+")";
                 stm.executeUpdate(sql);
             }
@@ -92,5 +80,20 @@ public class CartDAO {
             Logger.getLogger(CartDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+    
+    public Cart getCart(int userId){
+        try {
+            String sql = "SELECT * FROM ((products INNER JOIN cart_contains ON products.product_id = cart_contains.product_id) INNER JOIN cart ON cart_contains.cart_id = cart.cart_id) where user_id = " + userId;
+            rs = stm.executeQuery(sql);
+            Cart cart = new Cart();
+            while(rs.next()){
+                cart.getCart().add(new Item(userId, rs.getInt("quantity"), rs.getInt("product_id")));
+            }
+            return cart;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

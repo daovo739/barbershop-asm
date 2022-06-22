@@ -58,11 +58,9 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("userName")) {
+            if (cookie.getName().equals("userName") || cookie.getName().equals("userId")) {
                 cookie.setMaxAge(0);
                 response.addCookie(cookie);
-                request.getSession().removeAttribute("userLogin");
-                request.getSession().removeAttribute("userId");
             }
         }
         request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);

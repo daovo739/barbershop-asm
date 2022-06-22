@@ -179,5 +179,4 @@ public class ProductsDAO {
         return 0;
      }
      
-//     public boolean insertToCart()
 }
