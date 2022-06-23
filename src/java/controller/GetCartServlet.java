@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Cart;
+import model.Item;
 
 /**
  *
@@ -63,6 +64,7 @@ public class GetCartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        PrintWriter out = response.getWriter();
         int userId = 0;
         Cookie[] cookies = request.getCookies();
         boolean isHaveCooky = false;
@@ -75,13 +77,27 @@ public class GetCartServlet extends HttpServlet {
         try {
             CartDAO cartDAO = new CartDAO();
             Cart cart = cartDAO.getCart(userId);
-            if(cart == null){
-                session.setAttribute("emptyCart", "Your cart is empty. Shopping now!");
+            if(cart.getCart().isEmpty()){
+                out.println("<h2 class=\"text-white\">Your cart is empty. Shopping now!</h2>");
             }else{
-                session.removeAttribute("emptyCart");
-                session.setAttribute("cart", cart);
+                for (Item item : cart.getCart()) {
+                    out.println("<div class=\"col-lg-10 d-flex\">\n" +
+"                        <div class=\"\" style=\"width: 94px; height: 94px; margin-right: 5px\">\n" +
+"                            <img src=\""+item.getProduct().getImgLink()+"\" alt=\"alt\" class=\"rounded\" style=\"width: 94px; height: 94px\"/>\n" +
+"                        </div>\n" +
+"                        <div class=\"text-capitalize\">\n" +
+"                            <h5 class=\"fw-light fst-italic\">"+item.getProduct().getName()+"</h5>\n" +
+"                            <h6 class=\" fw-lighter\">"+item.getProduct().getBrand()+"</h6>\n" +
+"                        </div>\n" +
+"                    </div>\n" +
+"                    <div class=\"col-lg-2 d-flex flex-column justify-content-between align-items-center\">\n" +
+"                        <p>$"+item.getTotalCost()+"</p>\n" +
+"                        <input type=\"number\" value=\""+item.getQuantity()+"\" readonly=\"true\" style=\"width: 30px\" class=\"text-center\">\n" +
+"                        <button style=\"background: transparent\"><a href=\"url\" class=\"text-decoration-none\">Remove</a></button>\n" +
+"                    </div>\n" +
+"                    <hr style=\"margin-top: 12px\">\n");
+                }
             }
-            request.getRequestDispatcher("products").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(GetCartServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -37,10 +37,10 @@
                                     <h4 class="fst-italic text-capitalize" style="letter-spacing: 2px">${product.getName()}</h4>
                                     <h3>$${product.getPrice()}</h3>
                                 </div>
-                                <form action="addToCart" class="d-flex w-50 justify-content-between mt-3" >
-                                    <input type="text" value="${product.getId()}" name="id" hidden="true"/>
-                                    <input type="number" name="quantity" min="1" value="1" style="width: 50px; text-align: center">
-                                    <input type="submit" class="form-control btn-secondary w-75 rounded-pill" id="formGroupExampleInput" value="Add To Cart" required="">
+                                <form  class="d-flex w-50 justify-content-between mt-3" >
+                                    <input type="text" value="${product.getId()}" name="id" hidden="true" id="id"/>
+                                    <input type="number" name="quantity" min="1" value="1" style="width: 50px; text-align: center" id="quantity">
+                                    <input  class="form-control btn-secondary w-75 rounded-pill text-center" id="formGroupExampleInput" value="Add To Cart" required="" onclick="addToCart()">
                                 </form>
                                 <div class="mt-3">
                                     <h2>Product Description</h2>
@@ -54,5 +54,28 @@
             </section>
         </main>
         <jsp:include page="layout/footer.jsp"/>
+        <script>
+            const addToCart = () => {
+                const id = document.querySelector("#id").value;
+                const quantity = document.querySelector("#quantity").value;
+                if (!quantity){
+                    quantity = 1;
+                }
+                $.ajax({
+                    url: "/barbershop/addToCart",
+                    type: "GET",
+                    data:{
+                      quantity: quantity,
+                      id: id
+                    },
+                    success: function (results) {
+                        console.log(results);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }   
+                });
+            }
+        </script>
     </body>
 </html>

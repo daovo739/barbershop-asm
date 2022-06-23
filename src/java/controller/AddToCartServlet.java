@@ -76,15 +76,15 @@ public class AddToCartServlet extends HttpServlet {
                 request.setAttribute("msg", "Please login before shopping");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-            int quantity = 1;
-            if (request.getParameter("quantity") != null){
-                quantity = Integer.parseInt(request.getParameter("quantity"));
-            }
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            
             int productId = Integer.parseInt(request.getParameter("id"));
             Item item = new Item(userId, quantity, productId);
             CartDAO cartDAO = new CartDAO();
             cartDAO.insertCart(item);
-            request.getRequestDispatcher("GetCartServlet").forward(request, response);
+            PrintWriter out = response.getWriter();
+            out.println("Add Successfully");
+//            request.getRequestDispatcher("products").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

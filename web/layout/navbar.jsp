@@ -73,7 +73,7 @@
                             </div>
                             <div class="cart-icon-container">
                                 <button class="btn btn-sidebar" type="button" data-bs-toggle="offcanvas" 
-                                        data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                                        data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" onclick="getCart()">
                                     <span class="material-symbols-outlined" style="color: #F9F2ED; font-size: 40px"> shopping_cart</span>
                                 </button>
                                 <div class="text-white text-center cart-count">
@@ -86,8 +86,24 @@
 
                     </c:if>
                     </div>
-                </div>
-            </nav>
-            <jsp:include page="cartSidebar.jsp"/>
+            </div>
+        </nav>
+        <jsp:include page="cartSidebar.jsp"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script>
+            const getCart = () => {
+    $.ajax({
+        url: "/barbershop/GetCartServlet",
+        type: "GET",
+        success: function (results) {
+            console.log(results);
+            document.querySelector(".cart-list").innerHTML = results;
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+};
+        </script>
     </body>
 </html>
