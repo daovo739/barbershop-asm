@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Cart;
 import model.Item;
 
 /**
@@ -62,15 +63,10 @@ public class AddToCartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            int userId = 0;
-            Cookie[] cookies = request.getCookies();
             boolean isHaveCooky = false;
-            for (Cookie cooky : cookies) {
-                if (cooky.getName().equals("userId")) {
-                    userId = Integer.parseInt(cooky.getValue());
-                    isHaveCooky = true;
-                    break;
-                }
+            int userId = getUserId(request, response);
+            if ( userId != -1){
+                isHaveCooky = true;
             }
             if (!isHaveCooky) {
                 request.setAttribute("msg", "Please login before shopping");
@@ -82,8 +78,10 @@ public class AddToCartServlet extends HttpServlet {
             Item item = new Item(userId, quantity, productId);
             CartDAO cartDAO = new CartDAO();
             cartDAO.insertCart(item);
+            int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userId));
+            request.getSession().setAttribute("cartCount", countProduct);
             PrintWriter out = response.getWriter();
-            out.println("Add Successfully");
+            out.println(countProduct);
 //            request.getRequestDispatcher("products").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,11 +104,88 @@ public class AddToCartServlet extends HttpServlet {
     /**
      * Returns a short description of the servlet.
      *
-     * @return a String containing servlet description
+     * @param req
+     * @param res
+     * @throws javax.servlet.ServletException
+     * @throws java.io.IOException
      */
+    
+    
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        try {
+            int userId = getUserId(req, res);
+            PrintWriter out = res.getWriter();
+            CartDAO cartDAO = new CartDAO();
+            int id = Integer.parseInt(req.getParameter("id"));
+            if (cartDAO.deleteProduct(id)) {
+                int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userId));
+                req.getSession().setAttribute("cartCount", countProduct);
+                Cart cart = cartDAO.getCart(userId);
+                if (cart.getCart().isEmpty()) {
+                    out.println("<div class=\"offcanvas-header\">\n"
+                            + "        <h5 class=\"offcanvas-title\" id=\"offcanvasWithBothOptionsLabel\">Your Cart</h5>\n"
+                            + "        <button type=\"button\" class=\"btn-close text-reset btn-close-white\" data-bs-dismiss=\"offcanvas\" aria-label=\"Close\"></button>\n"
+                            + "    </div>\n"
+                            + "        <div class=\"offcanvas-body h-25   cart-list\" style=\"overflow-x: hidden\"><h2 class=\"text-white\">Your cart is empty. Shopping now!</h2>\n"
+                            + "        </div>");
+                } else {
+                    String data = "<div class=\"offcanvas-header\">\n"
+                            + "        <h5 class=\"offcanvas-title\" id=\"offcanvasWithBothOptionsLabel\">Your Cart</h5>\n"
+                            + "        <button type=\"button\" class=\"btn-close text-reset btn-close-white\" data-bs-dismiss=\"offcanvas\" aria-label=\"Close\"></button>\n"
+                            + "    </div>\n"
+                            + "        <div class=\"offcanvas-body h-25   cart-list\" style=\"overflow-x: hidden\">\n"
+                            + "        <div class=\"row\">";
+                    for (Item item : cart.getCart()) {
+                        data += "<div class=\"col-lg-10 d-flex\">\n"
+                                + "                        <div class=\"\" style=\"width: 94px; height: 94px; margin-right: 5px\">\n"
+                                + "                            <img src=\"" + item.getProduct().getImgLink() + "\" alt=\"alt\" class=\"rounded\" style=\"width: 94px; height: 94px\"/>\n"
+                                + "                        </div>\n"
+                                + "                        <div class=\"text-capitalize\">\n"
+                                + "                            <h5 class=\"fw-light fst-italic\">" + item.getProduct().getName() + "</h5>\n"
+                                + "                            <h6 class=\" fw-lighter\">" + item.getProduct().getBrand() + "</h6>\n"
+                                + "                        </div>\n"
+                                + "                    </div>\n"
+                                + "                    <div class=\"col-lg-2 d-flex flex-column justify-content-between align-items-center\">\n"
+                                + "                        <p>$" + item.getTotalCost() + "</p>\n"
+                                + "                        <input type=\"number\" value=\"" + item.getQuantity() + "\" readonly=\"true\" style=\"width: 36px\" class=\"text-center\">\n"
+                                + "                        <button style=\"background: transparent\"><a data-product-id = \"" + item.getProduct().getId() + "\" class=\"text-decoration-none\" onclick=\"deleteProduct(this)\">Remove</a></button>\n"
+                                + "                    </div>\n"
+                                + "                    <hr style=\"margin-top: 12px\">\n";
+                    }
+                    data += "</div>\n"
+                            + "    </div>\n"
+                            + "    <div class=\"bottom d-flex flex-column\" style=\"padding: 0 16px;margin-bottom: 16px\">\n"
+                            + "        <div class=\"d-flex justify-content-between\">\n"
+                            + "            <p class=\"fs-3 text\">Total</p>\n"
+                            + "            <p class=\"fs-3 text fw-bold\">$" + cart.getTotalCostCart() + "</p>\n"
+                            + "        </div>\n"
+                            + "        <button class=\"btn btn-primary\"><a  class=\"text-white text-decoration-none\">Checkout</a></button>\n"
+                            + "    </div>";
+                    out.println(data);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public int getUserId(HttpServletRequest req, HttpServletResponse res){
+        int userId = -1;
+            Cookie[] cookies = req.getCookies();
+            
+            for (Cookie cooky : cookies) {
+                if (cooky.getName().equals("userId")) {
+                    userId = Integer.parseInt(cooky.getValue());
+                    break;
+                }
+            }
+            return userId;
+    }
+    
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    } // </editor-fold>
 
 }

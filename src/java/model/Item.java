@@ -6,6 +6,7 @@ package model;
 
 import DAO.ProductsDAO;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 /**
  *
@@ -56,12 +57,15 @@ public class Item {
     }
 
     public double getTotalCost() {
-        return this.getProduct().getPrice() * this.getQuantity();
+        return formatPrice(this.getProduct().getPrice() * this.getQuantity());
     }
 
     public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
 
-    
+    public double formatPrice(double price){
+        DecimalFormat df=new DecimalFormat("#.##");
+        return Double.parseDouble(df.format(price));
+    }
 }

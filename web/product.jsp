@@ -40,7 +40,7 @@
                                 <form  class="d-flex w-50 justify-content-between mt-3" >
                                     <!--<input type="text"  name="id" hidden="true" id="id"/>-->
                                     <input type="number" name="quantity" min="1" value="1" style="width: 50px; text-align: center" id="quantity">
-                                    <input value="${product.getId()}" class="form-control btn-secondary w-75 rounded-pill text-center" id="formGroupExampleInput" value="Add To Cart" required="" onclick="addToCart(this.value)">
+                                    <input data-product-id="${product.getId()}" class="form-control btn-secondary w-75 rounded-pill text-center addCartBtn" id="formGroupExampleInput" value="Add To Cart" required="" onclick="addToCart(this)">
                                 </form>
                                 <div class="mt-3">
                                     <h2>Product Description</h2>

@@ -63,7 +63,7 @@ public class CartDAO {
         try {
             if (isExsist(userId)) {
                 int cartId = getCartIdByUserId(userId);
-                sql = "update cart_contains set quantity = " + quantity + " where product_id = " + productId + " and cart_id = " + cartId;
+                sql = "update cart_contains set quantity = quantity + " + quantity + " where product_id = " + productId + " and cart_id = " + cartId;
                 if (stm.executeUpdate(sql) <= 0) {
                     sql = "insert into cart_contains values(" + cartId + "," + productId + "," + quantity + ")";
                     stm.executeUpdate(sql);
@@ -95,5 +95,29 @@ public class CartDAO {
             Logger.getLogger(CartDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public int getTotalRows(int cartId){
+        try {
+            String sql = "SELECT COUNT(1) FROM  cart_contains where cart_id = " + cartId ;
+            rs = stm.executeQuery(sql);
+            rs.next();
+            int total = rs.getInt(1);
+            return total;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    public boolean deleteProduct(int productId){
+        try {
+            String sql = "Delete FROM  cart_contains where product_id = " + productId ;
+            stm.executeUpdate(sql);
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

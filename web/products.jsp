@@ -71,7 +71,7 @@
                                             <h5 class="card-text text-capitalize text-center text-white-50" style="font-size: 20px">$${product.getPrice()}</h5>
                                         </div>
                                         <form  class="d-flex justify-content-center">
-                                            <input  value="${product.getId()}" class="btn btn-primary mb-3 text-white w-100" style="max-width: 75%" value="Add to cart" onclick="addToCart(this.value)"/>
+                                            <input  data-product-id="${product.getId()}" class="btn btn-primary mb-3 text-white w-100 addCartBtn" style="max-width: 75%" value="Add to cart" onclick="addToCart(this)"/>
                                         </form>
                                     </div>
                                 </div> 
@@ -96,8 +96,8 @@
             const pagination = document.querySelector("#pagination-container");
             if (value) {
                 $.ajax({
-                    url: "/barbershop/search",
-                    type: "GET",
+                    url: "/barbershop/products",
+                    type: "POST",
                     data: {
                         search: value
                     },

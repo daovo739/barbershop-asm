@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +25,7 @@ public class Cart {
         for (Item item : cart) {
             totalCostCart += item.getTotalCost();
         }
-        return totalCostCart;
+        return formatPrice(totalCostCart);
     }
 
     public void settotalCostCartt(double totalCostCart) {
@@ -40,4 +41,8 @@ public class Cart {
         this.cart = cart;
     }
 
+    public double formatPrice(double price){
+        DecimalFormat df=new DecimalFormat("#.##");
+        return Double.parseDouble(df.format(price));
+    }
 }

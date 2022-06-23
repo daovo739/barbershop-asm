@@ -128,7 +128,36 @@ public class GetProductsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+          PrintWriter out = response.getWriter();
+        ArrayList<Product> products = null;
+        try {
+            ProductsDAO db = new ProductsDAO();
+            String search = request.getParameter("search");
+            products = db.getProductsSearching(search);      
+            if (products != null) {
+                for (Product product : products) {
+                    out.println("<div class=\"col-lg-3 d-flex align-items-stretch\" style=\"width: 15rem\">\n" +
+"                                    <div class=\"card bg-dark\" style=\"width:100%;\">\n" +
+"                                        <a  href=\"product?id="+product.getId()+"\" class=\"card-view-container text-decoration-none\">\n" +
+"                                            <img src=\""+product.getImgLink()+"\" class=\"card-img-top img-thumbnail\" alt=\"...\" >  \n" +
+"                                             <div class=\"card-view\">View product</div>    \n" +
+"                                        </a>                                         \n" +
+"                                        <div class=\"card-body d-flex flex-column justify-content-between\">\n" +
+"                                            <h6 class=\"card-subtitle mb-2 text-muted text-center text-capitalize\" style=\"font-size: 10px\">"+product.getBrand()+"</h6>\n" +
+"                                            <h5 class=\"card-title text-capitalize text-center text-white\" style=\"font-size: 14px\">"+product.getName()+"</h5>\n" +
+"                                            <h5 class=\"card-text text-capitalize text-center text-white-50\" style=\"font-size: 20px\">$"+product.getPrice()+"</h5>\n" +
+"                                        </div>\n" +
+"                                        <form  class=\"d-flex justify-content-center\">\n" +
+"                                            <input  data-product-id=\""+product.getId()+"\" class=\"btn btn-primary mb-3 text-white w-100\" style=\"max-width: 75%\" value=\"Add to cart\" onclick=\"addToCart(this)\"/>\n" +
+"                                        </form>\n" +
+"                                    </div>\n" +
+"                                </div> ");
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(GetProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

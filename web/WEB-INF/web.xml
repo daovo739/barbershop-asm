@@ -9,10 +9,6 @@
         <servlet-class>controller.GetProductsServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>FilterServlet</servlet-name>
-        <servlet-class>controller.FilterServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>GetSingleProduct</servlet-name>
         <servlet-class>controller.GetSingleProduct</servlet-class>
     </servlet>
@@ -36,6 +32,10 @@
         <servlet-name>GetCartServlet</servlet-name>
         <servlet-class>controller.GetCartServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoadDataServlet</servlet-name>
+        <servlet-class>controller.LoadDataServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GetProductsHomeServlet</servlet-name>
         <url-pattern>/GetProductsHomeServlet</url-pattern>
@@ -43,10 +43,6 @@
     <servlet-mapping>
         <servlet-name>GetProductsServlet</servlet-name>
         <url-pattern>/products</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FilterServlet</servlet-name>
-        <url-pattern>/search</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetSingleProduct</servlet-name>
@@ -72,12 +68,16 @@
         <servlet-name>GetCartServlet</servlet-name>
         <url-pattern>/GetCartServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadDataServlet</servlet-name>
+        <url-pattern>/LoadDataServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>GetProductsHomeServlet</welcome-file>
+        <welcome-file>LoadDataServlet</welcome-file>
     </welcome-file-list>
 </web-app>

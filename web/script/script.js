@@ -4,24 +4,37 @@
  */
 
 
-const addToCart = (value) => {
-//    const id = document.querySelector("#id").value;
-    const quantity = document.querySelector("#quantity").value;
-    if (!quantity) {
-        quantity = 1;
-    }
+const addToCart = (product) => {
+    const id = product.getAttribute('data-product-id');
+    const quantityEle = document.querySelector("#quantity");
+    quantity = !quantityEle ? 1 : quantityEle.value;
     $.ajax({
         url: "/barbershop/addToCart",
         type: "GET",
         data: {
             quantity: quantity,
-            id: value
+            id: id
         },
         success: function (results) {
-            console.log(results);
+            document.querySelector(".cart-count").textContent = results;
+//            console.log(results);
         },
         error: function (error) {
             console.log(error);
         }
     });
 };
+
+const  toastTrigger = document.querySelectorAll('.addCartBtn');
+const toastLiveExample = document.getElementById('liveToast');
+if (toastTrigger) {
+    toastTrigger.forEach((item) => {
+        item.addEventListener('click', function () {
+            var toast = new bootstrap.Toast(toastLiveExample);
+
+            toast.show();
+        });
+    })
+
+}
+;

@@ -77,7 +77,7 @@
                                     <span class="material-symbols-outlined" style="color: #F9F2ED; font-size: 40px"> shopping_cart</span>
                                 </button>
                                 <div class="text-white text-center cart-count">
-                                    <p class="w-100 h-100">0</p>
+                                    <p class="w-100 h-100">${cartCount}</p>
                                 </div>
 
                             </div>
@@ -89,21 +89,53 @@
             </div>
         </nav>
         <jsp:include page="cartSidebar.jsp"/>
+        <!--TOAST-->
+        <div class="position-fixed top-25 end-0 p-3" style="z-index: 11" >
+            <div id="liveToast" class="toast " role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="1000">
+                <div class="toast-header ">
+                    <span class="material-symbols-outlined text-success">
+                        check
+                    </span>
+                    <strong class="me-auto text-success">Notification</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Add product to cart successfully!
+                </div>
+            </div>
+        </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script>
             const getCart = () => {
-    $.ajax({
-        url: "/barbershop/GetCartServlet",
-        type: "GET",
-        success: function (results) {
-//            console.log(results);
-            document.querySelector(".cart-list").innerHTML = results;
-        },
-        error: function (error) {
-            console.log(error);
-        }
-    });
-};
+                    $.ajax({
+                        url: "/barbershop/GetCartServlet",
+                        type: "GET",
+                        success: function (results) {
+//                            console.log(results);
+                            document.querySelector(".offcanvas-insert").innerHTML = results;
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                };
+                
+                const deleteProduct = (product) => {
+                    const id = product.getAttribute("data-product-id");
+                    $.ajax({
+                        url: "/barbershop/addToCart" + "?" + $.param({id}),
+                        type: "DELETE",
+                        success: function (results) {
+//                            console.log(results);
+                            document.querySelector(".offcanvas-insert").innerHTML = results;
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                    const cartCountEle = document.querySelector('.cart-count');
+                    cartCountEle.textContent = parseInt(cartCountEle.textContent) - 1;
+                };
         </script>
     </body>
 </html>
