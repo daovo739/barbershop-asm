@@ -96,7 +96,7 @@
         url: "/barbershop/GetCartServlet",
         type: "GET",
         success: function (results) {
-            console.log(results);
+//            console.log(results);
             document.querySelector(".cart-list").innerHTML = results;
         },
         error: function (error) {

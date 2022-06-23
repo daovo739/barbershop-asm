@@ -60,21 +60,20 @@
                             <div class="row products-list gy-5">
                             <c:forEach items="${products}" var="product">
                                 <div class="col-lg-3 d-flex align-items-stretch" style="width: 15rem">
-                                    <a href="product?id=${product.getId()}" class="card bg-dark" style="width:100%; text-decoration: none;">
-                                        <div class="card-view-container">
+                                    <div class="card bg-dark" style="width:100%;">
+                                        <a  href="product?id=${product.getId()}" class="card-view-container text-decoration-none">
                                             <img src="${product.getImgLink()}" class="card-img-top img-thumbnail" alt="..." >  
                                              <div class="card-view">View product</div>    
-                                        </div>                                         
+                                        </a>                                         
                                         <div class="card-body d-flex flex-column justify-content-between">
                                             <h6 class="card-subtitle mb-2 text-muted text-center text-capitalize" style="font-size: 10px">${product.getBrand()}</h6>
                                             <h5 class="card-title text-capitalize text-center text-white" style="font-size: 14px">${product.getName()}</h5>
                                             <h5 class="card-text text-capitalize text-center text-white-50" style="font-size: 20px">$${product.getPrice()}</h5>
                                         </div>
-                                        <form action="addToCart?" class="d-flex justify-content-center">
-                                            <input type="text" value="${product.getId()}" name="id" hidden="true"/>
-                                            <input  type="submit" class="btn btn-primary mb-3 text-white w-100" style="max-width: 75%" value="Add to cart"/>
+                                        <form  class="d-flex justify-content-center">
+                                            <input  value="${product.getId()}" class="btn btn-primary mb-3 text-white w-100" style="max-width: 75%" value="Add to cart" onclick="addToCart(this.value)"/>
                                         </form>
-                                    </a>
+                                    </div>
                                 </div> 
                             </c:forEach> 
                         </div>
@@ -116,4 +115,5 @@
 
         };
     </script>
+    <script src="./script/script.js"></script>
 </html>

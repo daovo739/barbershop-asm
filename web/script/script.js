@@ -3,39 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-const formAddCart = document.querySelector(".form-add-to-cart");
 
-
-//formAddCart.addEventListener("submit", () => {
-//    const productId = document.querySelector("#productId");
-//    const quantity = document.querySelector("#quantity");
-//    $.ajax({
-//        url: "/barbershop/addToCart",
-//        type: "GET",
-//        data: {
-//            productId: productId,
-//            quantity: quantity
-//        },
-//        success: function (results) {
-//            console.log(2);
-//            document.querySelector(".cart-list").innerHTML = results;
-//        },
-//        error: function (error) {
-//            console.log(error);
-//        }
-//    });
-//});
-
-const getCart = () => {
+const addToCart = (value) => {
+//    const id = document.querySelector("#id").value;
+    const quantity = document.querySelector("#quantity").value;
+    if (!quantity) {
+        quantity = 1;
+    }
     $.ajax({
-        url: "/barbershop/GetCartServlet",
+        url: "/barbershop/addToCart",
         type: "GET",
+        data: {
+            quantity: quantity,
+            id: value
+        },
         success: function (results) {
-            console.log(2);
-            document.querySelector(".cart-list").innerHTML = results;
+            console.log(results);
         },
         error: function (error) {
             console.log(error);
         }
     });
-}
+};
