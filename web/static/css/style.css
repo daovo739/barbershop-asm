@@ -58,6 +58,11 @@ main, nav, footer{
     opacity: .5;
     color: #fff;
 }
+
+.carousel-header-img{
+    height: 870px;
+    max-height: 870px;
+}
 /*======= SECTION ============*/
 section{
     padding: 30px 0 ;
@@ -177,4 +182,26 @@ transform: scale(1.2);
  }
  
 
+ /* Color of the links BEFORE scroll */
+.navbar-scroll .nav-link,
+.navbar-scroll .navbar-toggler-icon {
+  color: #fff;
+}
+
+/* Color of the links AFTER scroll */
+.navbar-scrolled .nav-link,
+.navbar-scrolled .navbar-toggler-icon {
+  color: #4f4f4f;
+}
+
+/* Color of the navbar AFTER scroll */
+.navbar-scrolled {
+  background-color: #fff;
+}
+
+/* An optional height of the navbar AFTER scroll */
+.navbar.navbar-scroll.navbar-scrolled {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
  

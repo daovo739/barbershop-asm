@@ -4,9 +4,13 @@
  */
 package controller;
 
+import DAO.CartDAO;
 import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -59,7 +63,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
     }
 
     /**
@@ -73,21 +77,29 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserDAO userDAO = new UserDAO();
-        String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
-        User user = new User(userName,password);
-        if (userDAO.checkLogin(user)) {
-            Cookie userCookie = new Cookie("userName", userName);
-            userCookie.setMaxAge(60*60*24);
-            response.addCookie(userCookie);
-            Cookie idCookie = new Cookie("userId", Integer.toString(userDAO.getUserIdByUsername(userName)));
-            userCookie.setMaxAge(60*60*24);
-            response.addCookie(idCookie);
-            request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
-        } else {
-            request.setAttribute("msg", "User name or password is incorrect");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+        try {
+            UserDAO userDAO = new UserDAO();
+            CartDAO cartDAO = new CartDAO();
+            String userName = request.getParameter("userName");
+            String password = request.getParameter("password");
+            User user = new User(userName,password);
+            if (userDAO.checkLogin(user)) {
+                Cookie userCookie = new Cookie("userName", userName);
+                userCookie.setMaxAge(60*60*24*30);
+                response.addCookie(userCookie);
+                int userId = userDAO.getUserIdByUsername(userName);
+                Cookie idCookie = new Cookie("userId", Integer.toString(userId));
+                idCookie.setMaxAge(60 * 60 * 24 * 30);
+                response.addCookie(idCookie);
+                int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userId));
+                request.getSession().setAttribute("cartCount", countProduct);
+                request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
+            } else {
+                request.setAttribute("msg", "User name or password is incorrect");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

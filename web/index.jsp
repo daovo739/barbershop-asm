@@ -19,18 +19,18 @@
     </head>
     <body>
         <jsp:include page="layout/navbar.jsp"/>
-        <header class="w-100" style="position: relative">
+        <header class="w-100 " style="position: relative; ">
             <div id="carouselExampleInterval" class="carousel slide carousel-fade w-100" data-bs-ride="carousel" >         
                 <a href="#booking" class="carousel-btn">Booking now</a>
-                <div class="carousel-inner h-100">
+                <div class="carousel-inner">
                     <div class="carousel-item active" data-bs-interval="1800">
-                        <img src="./static/images/background/background3.jpg" class="d-block w-100 img-fluid" alt="..." style="object-fit:cover">
+                        <img src="./static/images/background/background3.jpg" class="d-block w-100 img-fluid carousel-header-img" alt="..." style="object-fit:cover">
                     </div>
-                    <div class="carousel-item h-100" data-bs-interval="1800">
-                        <img src="./static/images/background/background1.jpg" class="d-block w-100 img-fluid"  alt="..." style="object-fit:cover">
+                    <div class="carousel-item" data-bs-interval="1800">
+                        <img src="./static/images/background/background1.jpg" class="d-block w-100 img-fluid carousel-header-img"  alt="..." style="object-fit:cover">
                     </div>
-                    <div class="carousel-item h-100">
-                        <img src="./static/images/background/background2.jpg" class="d-block w-100 img-fluid" alt="..." style="object-fit:cover">
+                    <div class="carousel-item">
+                        <img src="./static/images/background/background2.jpg" class="d-block w-100 img-fluid carousel-header-img" alt="..." style="object-fit:cover">
                     </div>
                 </div>
             </div>

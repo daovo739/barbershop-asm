@@ -136,6 +136,23 @@
                     const cartCountEle = document.querySelector('.cart-count');
                     cartCountEle.textContent = parseInt(cartCountEle.textContent) - 1;
                 };
+                
+                const changeQuantity = (inputEle) => {
+                    const quantity = inputEle.value;
+                    const id = inputEle.getAttribute('data-product-id');
+                                        $.ajax({
+                        url: "/barbershop/addToCart" + "?" + $.param({quantity, id}),
+                        type: "PUT",
+                        success: function (results) {
+//                            console.log(results);
+                            document.querySelector(".offcanvas-insert").innerHTML = results;
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                    
+                };
         </script>
     </body>
 </html>
