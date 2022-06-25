@@ -2,28 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.admin;
 
-import DAO.CartDAO;
-import DAO.UserDAO;
+import DAO.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.User;
 
 /**
  *
  * @author HHPC
  */
-public class LoginServlet extends HttpServlet {
+public class ProductsServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +39,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet ProductsServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProductsServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,7 +60,14 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        try {
+            HttpSession session = request.getSession();
+            ProductsDAO productsDAO = new ProductsDAO();
+//        ArrayList<ik
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -77,35 +81,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            UserDAO userDAO = new UserDAO();
-            CartDAO cartDAO = new CartDAO();
-            String userName = request.getParameter("userName");
-            String password = request.getParameter("password");
-            if (userName.equals("admin") && password.equals("admin")) {
-                response.sendRedirect("productsAdmin");
-            } else {
-                User user = new User(userName, password);
-                if (userDAO.checkLogin(user)) {
-                    Cookie userCookie = new Cookie("userName", userName);
-                    userCookie.setMaxAge(60 * 60 * 24 * 30);
-                    response.addCookie(userCookie);
-                    int userId = userDAO.getUserIdByUsername(userName);
-                    Cookie idCookie = new Cookie("userId", Integer.toString(userId));
-                    idCookie.setMaxAge(60 * 60 * 24 * 30);
-                    response.addCookie(idCookie);
-                    int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userId));
-                    request.getSession().setAttribute("cartCount", countProduct);
-                    request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
-                } else {
-                    request.setAttribute("msg", "User name or password is incorrect");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
-                }
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

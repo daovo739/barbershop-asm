@@ -31,10 +31,8 @@ if (toastTrigger) {
     toastTrigger.forEach((item) => {
         item.addEventListener('click', function () {
             var toast = new bootstrap.Toast(toastLiveExample);
-
             toast.show();
         });
-    })
-
+    });
 }
 ;

@@ -9,9 +9,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     </head>
     <body>
         <c:set var="classNav" value="navbar navbar-expand-lg navbar-dark fixed-top"></c:set>
@@ -85,7 +83,7 @@
                         </div>
 
                     </c:if>
-                    </div>
+                </div>
             </div>
         </nav>
         <jsp:include page="cartSidebar.jsp"/>
@@ -106,53 +104,54 @@
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script>
-            const getCart = () => {
-                    $.ajax({
-                        url: "/barbershop/GetCartServlet",
-                        type: "GET",
-                        success: function (results) {
+                                            const getCart = () => {
+                                                $.ajax({
+                                                    url: "/barbershop/GetCartServlet",
+                                                    type: "GET",
+                                                    success: function (results) {
 //                            console.log(results);
-                            document.querySelector(".offcanvas-insert").innerHTML = results;
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                };
-                
-                const deleteProduct = (product) => {
-                    const id = product.getAttribute("data-product-id");
-                    $.ajax({
-                        url: "/barbershop/addToCart" + "?" + $.param({id}),
-                        type: "DELETE",
-                        success: function (results) {
+                                                        document.querySelector(".offcanvas-insert").innerHTML = results;
+                                                    },
+                                                    error: function (error) {
+                                                        console.log(error);
+                                                    }
+                                                });
+                                            };
+
+                                            const deleteProduct = (product) => {
+                                                const id = product.getAttribute("data-product-id");
+                                                $.ajax({
+                                                    url: "/barbershop/addToCart" + "?" + $.param({id}),
+                                                    type: "DELETE",
+                                                    success: function (results) {
 //                            console.log(results);
-                            document.querySelector(".offcanvas-insert").innerHTML = results;
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                    const cartCountEle = document.querySelector('.cart-count');
-                    cartCountEle.textContent = parseInt(cartCountEle.textContent) - 1;
-                };
-                
-                const changeQuantity = (inputEle) => {
-                    const quantity = inputEle.value;
-                    const id = inputEle.getAttribute('data-product-id');
-                                        $.ajax({
-                        url: "/barbershop/addToCart" + "?" + $.param({quantity, id}),
-                        type: "PUT",
-                        success: function (results) {
+                                                        document.querySelector(".offcanvas-insert").innerHTML = results;
+                                                    },
+                                                    error: function (error) {
+                                                        console.log(error);
+                                                    }
+                                                });
+                                                const cartCountEle = document.querySelector('.cart-count');
+                                                cartCountEle.textContent = parseInt(cartCountEle.textContent) - 1;
+                                            };
+
+                                            const changeQuantity = (inputEle) => {
+                                                const quantity = inputEle.value;
+                                                const id = inputEle.getAttribute('data-product-id');
+                                                $.ajax({
+                                                    url: "/barbershop/addToCart" + "?" + $.param({quantity, id}),
+                                                    type: "PUT",
+                                                    success: function (results) {
 //                            console.log(results);
-                            document.querySelector(".offcanvas-insert").innerHTML = results;
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                    
-                };
+                                                        document.querySelector(".offcanvas-insert").innerHTML = results;
+                                                    },
+                                                    error: function (error) {
+                                                        console.log(error);
+                                                    }
+                                                });
+
+                                            };
         </script>
     </body>
+
 </html>

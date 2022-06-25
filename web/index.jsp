@@ -86,22 +86,22 @@
 
             <section class="section-booking" id="booking">
                 <h1 class="section-title">Booking</h1>
-                <form class="row" action="#" method="POST">
+                <form class="row" action="sendEmail" method="POST">
                     <div class="col-lg-6">
                         <div class="mb-3">
-                            <input type="text" class="form-control bg-dark text-white" id="formGroupExampleInput" placeholder="Enter your phone number" name="booking-phone" required>
+                            <input type="email" class="form-control bg-dark text-white" id="formGroupExampleInput" placeholder="Enter your email" name="booking-email" required>
                         </div>
                         <div class="mb-3">
                             <input type="text" class="form-control bg-dark text-white" id="formGroupExampleInput2" placeholder="Enter your name" name="booking-name" required>
                         </div>
                         <select class="form-select  mb-3 bg-dark text-white" aria-label=".form-select-lg example" name="booking-service" required>
                             <option value="">Choose Service</option>
-                            <option value="combo">Full Combo</option>
-                            <option value="cutAndWash">Cut + Wash Hair</option>
-                            <option value="cut">Cut Hair</option>
+                            <option value="Full Combo">Full Combo</option>
+                            <option value="Cut and Wash">Cut + Wash Hair</option>
+                            <option value="Cut">Cut Hair</option>
                         </select>
                         <div class="mb-3">
-                            <input type="date" class="form-control bg-dark text-white" id="formGroupExampleInput2" placeholder="Enter booking date" name="booking-date" required>
+                            <input type="date" min = "${dateLimit}" class="form-control bg-dark text-white" id="formGroupExampleInput2" placeholder="Enter booking date" name="booking-date" required>
                         </div>
                         <div class="form-floating">
                             <textarea class="form-control bg-dark text-white" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="booking-note"></textarea>

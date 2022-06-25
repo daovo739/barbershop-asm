@@ -63,15 +63,26 @@
                                     <div class="card bg-dark" style="width:100%;">
                                         <a  href="product?id=${product.getId()}" class="card-view-container text-decoration-none">
                                             <img src="${product.getImgLink()}" class="card-img-top img-thumbnail" alt="..." >  
-                                             <div class="card-view">View product</div>    
+                                            <div class="card-view">View product</div>    
                                         </a>                                         
                                         <div class="card-body d-flex flex-column justify-content-between">
                                             <h6 class="card-subtitle mb-2 text-muted text-center text-capitalize" style="font-size: 10px">${product.getBrand()}</h6>
                                             <h5 class="card-title text-capitalize text-center text-white" style="font-size: 14px">${product.getName()}</h5>
                                             <h5 class="card-text text-capitalize text-center text-white-50" style="font-size: 20px">$${product.getPrice()}</h5>
                                         </div>
-                                        <form  class="d-flex justify-content-center">
-                                            <input  data-product-id="${product.getId()}" class="btn btn-primary mb-3 text-white w-100 addCartBtn" style="max-width: 75%" value="Add to cart" onclick="addToCart(this)"/>
+                                        <c:if test="${cookie.containsKey('userName')}">
+                                            <form  class="d-flex justify-content-center">
+                                            </c:if>
+                                            <c:if test="${not cookie.containsKey('userName')}">
+                                                <form  action="addToCart" class="d-flex justify-content-center">
+                                                </c:if>
+                                                <c:if test="${cookie.containsKey('userName')}">
+                                                    <input  data-product-id="${product.getId()}" class="btn btn-primary mb-3 text-white w-100 addCartBtn" style="max-width: 75%" value="Add to cart" onclick="addToCart(this)"/>
+                                                </c:if>
+                                                <c:if test="${not cookie.containsKey('userName')}">
+                                                    <input type="submit" data-product-id="${product.getId()}" class="btn btn-primary mb-3 text-white w-100 addCartBtn" style="max-width: 75%" value="Add to cart""/>
+                                                </c:if>
+
                                         </form>
                                     </div>
                                 </div> 

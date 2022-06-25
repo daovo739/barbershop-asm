@@ -7,8 +7,11 @@ package controller;
 import DAO.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Product;
+import org.apache.tomcat.jni.Mmap;
 
 /**
  *
@@ -59,10 +63,18 @@ public class GetProductsHomeServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+ 
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorrow = (Date) calendar.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateLimit = formatter.format(tomorrow);
+        session.setAttribute("dateLimit", dateLimit);
         try {
             ProductsDAO db = new ProductsDAO();
             ArrayList<Product> products = db.getRandomProducts();
@@ -78,7 +90,6 @@ public class GetProductsHomeServlet extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(GetProductsHomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
     /**

@@ -2,28 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.admin;
 
-import DAO.CartDAO;
-import DAO.UserDAO;
+import DAO.BookingDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import model.User;
+import model.Booking;
+import utillity.EmailSetUp;
 
 /**
  *
  * @author HHPC
  */
-public class LoginServlet extends HttpServlet {
+public class EmailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,6 +32,20 @@ public class LoginServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private String host;
+    private String port;
+    private String userName;
+    private String password;
+
+    @Override
+    public void init() throws ServletException {
+        host = getServletContext().getInitParameter("host");
+        port = getServletContext().getInitParameter("port");
+        userName = getServletContext().getInitParameter("userName");
+        password = getServletContext().getInitParameter("password");
+    }
+    
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -42,10 +54,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet EmailServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EmailServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,7 +75,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 
     /**
@@ -78,34 +90,31 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            UserDAO userDAO = new UserDAO();
-            CartDAO cartDAO = new CartDAO();
-            String userName = request.getParameter("userName");
-            String password = request.getParameter("password");
-            if (userName.equals("admin") && password.equals("admin")) {
-                response.sendRedirect("productsAdmin");
-            } else {
-                User user = new User(userName, password);
-                if (userDAO.checkLogin(user)) {
-                    Cookie userCookie = new Cookie("userName", userName);
-                    userCookie.setMaxAge(60 * 60 * 24 * 30);
-                    response.addCookie(userCookie);
-                    int userId = userDAO.getUserIdByUsername(userName);
-                    Cookie idCookie = new Cookie("userId", Integer.toString(userId));
-                    idCookie.setMaxAge(60 * 60 * 24 * 30);
-                    response.addCookie(idCookie);
-                    int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userId));
-                    request.getSession().setAttribute("cartCount", countProduct);
-                    request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
-                } else {
-                    request.setAttribute("msg", "User name or password is incorrect");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
-                }
+            String bookingEmail = request.getParameter("booking-email");
+            String bookingName = request.getParameter("booking-name");
+            String bookingService = request.getParameter("booking-service");
+            String bookingDay = request.getParameter("booking-date");
+            String bookingTime = request.getParameter("booking-time");
+            String bookingNote = "";
+            if (request.getParameter("booking-note") != null) {
+                bookingNote = request.getParameter("booking-note");
             }
-
+            String bookingDate = bookingDay + " " + bookingTime + ":00";
+            Booking booking = new Booking(bookingEmail, bookingName, bookingService, bookingDate, bookingNote);
+            BookingDAO bookingDAO = new BookingDAO();
+//            bookingDAO.insertBooking(booking);
+            EmailSetUp emailSetUp = new EmailSetUp(host, port, userName, password);
+            System.out.println(emailSetUp);
+            if (emailSetUp.sendMail(bookingEmail, "Booking at barbershop", "Thanks for booking in my barbershop")){
+                System.out.println("success");
+            }else{
+                System.out.println("error");
+            }
+            
         } catch (SQLException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EmailServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
     /**

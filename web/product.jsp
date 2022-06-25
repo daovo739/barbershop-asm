@@ -37,15 +37,25 @@
                                     <h4 class="fst-italic text-capitalize" style="letter-spacing: 2px">${product.getName()}</h4>
                                     <h3>$${product.getPrice()}</h3>
                                 </div>
-                                <form  class="d-flex w-50 justify-content-between mt-3" >
-                                    <!--<input type="text"  name="id" hidden="true" id="id"/>-->
-                                    <input type="number" name="quantity" min="1" value="1" style="width: 50px; text-align: center" id="quantity">
-                                    <input data-product-id="${product.getId()}" class="form-control btn-secondary w-75 rounded-pill text-center addCartBtn" id="formGroupExampleInput" value="Add To Cart" required="" onclick="addToCart(this)">
-                                </form>
-                                <div class="mt-3">
-                                    <h2>Product Description</h2>
-                                    <p class="w-75 lh-bas">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
-                                </div>
+                                <c:if test="${cookie.containsKey('userName')}">
+                                    <form  class="d-flex w-50 justify-content-between mt-3" >
+                                    </c:if>
+                                    <c:if test="${not cookie.containsKey('userName')}">
+                                        <form action="addToCart" class="d-flex w-50 justify-content-between mt-3" >
+                                        </c:if>
+                                        <input type="number" name="quantity" min="1" value="1" style="width: 50px; text-align: center" id="quantity">
+                                        <c:if test="${cookie.containsKey('userName')}">
+                                            <input data-product-id="${product.getId()}" class="form-control btn-secondary w-75 rounded-pill text-center addCartBtn" id="formGroupExampleInput" value="Add To Cart" required="" onclick="addToCart(this)">
+                                        </c:if>
+                                        <c:if test="${not cookie.containsKey('userName')}">
+                                            <input type="submit" data-product-id="${product.getId()}" class="form-control btn-secondary w-75 rounded-pill text-center addCartBtn" id="formGroupExampleInput" value="Add To Cart" required="">
+                                        </c:if>
+
+                                    </form>
+                                    <div class="mt-3">
+                                        <h2>Product Description</h2>
+                                        <p class="w-75 lh-bas">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                                    </div>
                                 <a class="btn btn-primary w-50" href="products?category=all" role="button">Continue Shopping &raquo;</a>
                              </div>
                         </div>
