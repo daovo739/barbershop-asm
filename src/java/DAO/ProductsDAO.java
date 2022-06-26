@@ -201,5 +201,21 @@ public class ProductsDAO {
         return 0;
     }
      
+    public boolean updateProduct(Product product){
+        try {
+            String sql = "update products set name = ? , brand = ?, price = ?, imgLink = ? where product_id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getBrand());
+            ps.setDouble(3, product.getPrice());
+            ps.setString(4, product.getImgLink());
+            ps.setInt(5, product.getId());
+            ps.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
     
 }

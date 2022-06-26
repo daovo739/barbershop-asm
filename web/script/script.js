@@ -34,5 +34,4 @@ if (toastTrigger) {
             toast.show();
         });
     });
-}
-;
+};

@@ -62,5 +62,16 @@
                 <button class="btn btn-danger">Sign Out</button>
             </div>
         </div>
+        
+        <div class="position-fixed top-25 end-0 p-3" style="z-index: 11" >
+            <div id="liveToastAdmin" class="toast " role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000">
+                <div class="toast-header ">
+                    <strong class="me-auto text-success">Notification</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body toast-body-admin">
+                </div>
+            </div>
+        </div>
     </body>
 
