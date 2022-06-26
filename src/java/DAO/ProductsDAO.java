@@ -29,6 +29,28 @@ public class ProductsDAO {
         stm = conn.createStatement();
     }
     
+     public ArrayList<Product> getAllProducts() {
+        try {
+            ArrayList<Product> products = new ArrayList<>();
+            String sql = "Select * from products";
+            rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                String brand = rs.getString(3);
+                double price = rs.getDouble(4);
+                String imgLink = rs.getString(5);
+                String available = rs.getString(6);
+                String category = rs.getString(7);
+                products.add(new Product(id, name, brand, imgLink, available, category, price));
+            }
+            return products;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+     
     public ArrayList<Product> getProducts(String categoryInput, String sortInput) {
         ArrayList<Product> products = new ArrayList<>();
         String sql;
@@ -165,18 +187,19 @@ public class ProductsDAO {
             Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-     }
-     
-     public double getPriceByName(String name){
-     try {
-                String sql = "select price from products where name  = " + name;
-             rs = stm.executeQuery(sql);
-             rs.next();
-             return rs.getDouble(1);
-         } catch (SQLException ex) {
-             Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
-         }
+    }
+
+    public double getPriceByName(String name) {
+        try {
+            String sql = "select price from products where name  = " + name;
+            rs = stm.executeQuery(sql);
+            rs.next();
+            return rs.getDouble(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return 0;
-     }
+    }
      
+    
 }

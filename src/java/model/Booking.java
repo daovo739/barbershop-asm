@@ -15,7 +15,8 @@ import java.util.logging.Logger;
  * @author HHPC
  */
 public class Booking {
-
+    
+    private int bookingId;
     private String bookingEmail, bookingName, bookingService, bookingDate, bookingNote;
 
     public Booking(String bookingEmail, String bookingName, String bookingService, String bookingDate, String bookingNote) {
@@ -26,14 +27,23 @@ public class Booking {
         this.bookingNote = bookingNote;
     }
 
-    public Booking(String bookingEmail, String bookingName, String bookingService, Date bookingDate, String bookingNote) {
+    public Booking(int bookingId, String bookingEmail, String bookingName, String bookingService, Date bookingDate, String bookingNote) {
+        this.bookingId = bookingId;
         this.bookingEmail = bookingEmail;
         this.bookingName = bookingName;
         this.bookingService = bookingService;
         setBookingDate(bookingDate);
         this.bookingNote = bookingNote;
     }
-    
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
+    }
+
     public String getBookingEmail() {
         return bookingEmail;
     }

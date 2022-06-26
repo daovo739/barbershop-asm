@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
     <body>
-        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark vh-100" style="width: 280px;">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark vh-100" style="width: 320px; position: fixed">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                 <img src="./static/images/logo/logo.png" alt="alt" class="img-fluid" style="height: 100px; width: 100px"/>
                 <span class="fs-4">Barbershop</span>

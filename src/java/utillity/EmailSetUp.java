@@ -40,13 +40,16 @@ public class EmailSetUp {
     
     public final boolean sendMail(String toAddress, String subject, String message){
         try {
+            String oauthToken = "ya29.a0ARrdaM-E523OC4qWq5bojvkKu0PkGulZPRFHBuYQZzWsc48Y5nhwTWlBcPPTdvaQeF2enwGiIU4f8e4UjgTZK2WbKIDKhCwgpCOaQhlxF8TM0fKhbAT2haYtGFZmWNHSticus5Bnutpl60DBTQE7j8tkjvgT";
             Properties properties = new Properties();
             properties.put("mail.smtp.host", this.host);
             properties.put("mail.smtp.port", this.port);
 //            properties.put("mail.smtp.auth", "true");
-//            properties.put("mail.smtp.starttls.enable", "true");
-            properties.put("mail.imap.ssl.enable", "true"); // required for Gmail
-            properties.put("mail.imap.auth.mechanisms", "XOAUTH2");
+            properties.put("mail.smtp.starttls.enable", "true");
+            properties.put("mail.smtp.ssl.enable", "true"); // required for Gmail
+            properties.put("mail.smtp.auth.mechanisms", "XOAUTH2");
+            
+         
             
             Authenticator auth = new Authenticator() {
                 @Override
@@ -56,7 +59,7 @@ public class EmailSetUp {
             };
             Session session = Session.getInstance(properties);
             Store store = session.getStore("imap");
-            store.connect("imap.gmail.com", userName, "969963125210-rh5dqf5658mt25eckl2ib7hir5nc3g34.apps.googleusercontent.com");
+            store.connect("imap.gmail.com", userName, oauthToken);
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(userName));
             InternetAddress[] toAddresses = {new InternetAddress(toAddress)};

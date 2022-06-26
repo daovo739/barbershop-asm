@@ -37,12 +37,13 @@ public class BookingDAO {
             String sql = "SELECT * FROM booking";
             rs = stm.executeQuery(sql);
             while(rs.next()){
+                int bookingid = rs.getInt(1);
                 String bookingEmail = rs.getString(2);
                 String bookingName = rs.getString(3);
                 String bookingService = rs.getString(4);
                 Date bookingDate = rs.getDate(5);
                 String bookingNote = rs.getString(6);
-                bookings.add(new Booking(bookingEmail, bookingName, bookingService, bookingDate, bookingNote));
+                bookings.add(new Booking(bookingid,bookingEmail, bookingName, bookingService, bookingDate, bookingNote));
             }  
             return bookings;
         } catch (SQLException ex) {

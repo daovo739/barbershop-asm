@@ -78,15 +78,16 @@ public class GetProductsHomeServlet extends HttpServlet {
         try {
             ProductsDAO db = new ProductsDAO();
             ArrayList<Product> products = db.getRandomProducts();
-            if(products == null){
+            if (products == null) {
                 request.setAttribute("msg", "Product List Is Empty");
                 request.getRequestDispatcher("index.jsp").forward(request, response);
+            } else {
+                int numOfProducts = (int) (products.size() % 3 == 0 ? products.size() / 3 : Math.floor(products.size() / 3) + 1);
+                session.setAttribute("products", products);
+                session.setAttribute("numOfProducts", numOfProducts);
+                session.setAttribute("categories", db.getCategories());
+                response.sendRedirect("index.jsp");
             }
-            int numOfProducts = (int) (products.size()%3 == 0 ? products.size()/3 : Math.floor(products.size()/3) + 1);
-            session.setAttribute("products", products);
-            session.setAttribute("numOfProducts", numOfProducts);
-            session.setAttribute("categories", db.getCategories());
-            response.sendRedirect("index.jsp");
         } catch (SQLException ex) {
             Logger.getLogger(GetProductsHomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

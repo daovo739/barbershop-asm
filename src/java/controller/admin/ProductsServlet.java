@@ -8,6 +8,7 @@ import DAO.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Product;
 
 /**
  *
@@ -63,7 +65,14 @@ public class ProductsServlet extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             ProductsDAO productsDAO = new ProductsDAO();
-//        ArrayList<ik
+            ArrayList<Product> products = productsDAO.getAllProducts();
+            if (products == null) {
+                request.setAttribute("msg", "Product List Is Empty");
+                request.getRequestDispatcher("productsAdmin.jsp").forward(request, response);
+            } else {
+                session.setAttribute("products", products);
+                response.sendRedirect("productsAdmin.jsp");
+            }
         } catch (SQLException ex) {
             Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
