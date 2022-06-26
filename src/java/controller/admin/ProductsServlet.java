@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import model.Product;
 
 /**
@@ -90,7 +91,25 @@ public class ProductsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            ProductsDAO productsDAO = new ProductsDAO();
+            Product product = productsDAO.getProductById(id);
+            if (request.getParameter("name") != null){
+                product.setName(request.getParameter("name"));
+            }
+            if (request.getParameter("brand") != null){
+                product.setBrand(request.getParameter("brand"));
+            }
+            if (request.getParameter("price") != null){
+                product.setPrice(Double.parseDouble(request.getParameter("price")));
+            }
+            Part filePart = request.getPart("file");
+            String fileName = filePart.getSubmittedFileName();
+            System.out.println(fileName);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
