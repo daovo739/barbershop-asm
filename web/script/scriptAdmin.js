@@ -5,26 +5,29 @@
     const toastLiveExample = document.getElementById('liveToastAdmin');
     const toast = new bootstrap.Toast(toastLiveExample);
     
-const updateProduct = async (ele) => {
+const updateProduct =  (ele) => {
     const id = ele.getAttribute("data-id");
     const name = document.querySelector("#name-" + id).value || "";
     const brand = document.querySelector("#brand-" + id).value || "";
+    const category = document.querySelector("#category-" + id).value || "";
     const price = document.querySelector("#price-" + id).value || "";
     const ajaxfile = document.querySelector("#ajaxfile-" + id);
     const file = ajaxfile.files[0];
 
-    if (!name && !brand && !price && !file) {
-        console.log("empty");
+    if (!name && !brand && !price && !file && !category) {
+        document.querySelector(".toast-body-admin").textContent = "Empty input";
+        toast.show();
     } else {
         let data = new FormData();
         data.append("file", file);
         data.append("id", id);
         data.append("name", name);
         data.append("brand", brand);
+        data.append("category", category);
         data.append("price", price);
         $.ajax({
             url: "/barbershop/productsAdmin",
-            type: "POST",
+            type: "PUT",
             processData: false,
             contentType: false,
             enctype: 'multipart/form-data',
@@ -44,5 +47,45 @@ const updateProduct = async (ele) => {
             }
         });
     }
+};
 
+const createProduct =  () => {
+    const name = document.querySelector("#name-create").value;
+    const brand = document.querySelector("#brand-create").value;
+    const category = document.querySelector("#category-create").value;
+    const price = document.querySelector("#price-create").value;
+    const ajaxfile = document.querySelector("#ajaxfile-create");
+    const file = ajaxfile.files[0];
+    console.log(price);
+    if (!name || !brand || !price || !file || !category) {
+        document.querySelector(".toast-body-admin").textContent = "Empty input";
+        toast.show();
+    } else {
+        let data = new FormData();
+        data.append("file", file);
+        data.append("name", name);
+        data.append("brand", brand);
+        data.append("category", category);
+        data.append("price", price);
+        $.ajax({
+            url: "/barbershop/productsAdmin",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            data: data,
+            success: function (results) {
+                document.querySelector(".close-modal-create").click();
+                document.querySelector(".products-container").innerHTML = results;
+                document.querySelector(".toast-body-admin").textContent = "Create successfully!";            
+                toast.show();
+//                            console.log(results);
+            },
+            error: function (error) {
+                document.querySelector(".toast-body-admin").textContent = "Create failed!";
+                toast.show();
+                console.log(error);
+            }
+        });
+    }
 };

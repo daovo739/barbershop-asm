@@ -86,6 +86,36 @@ public class ProductsServlet extends HttpServlet {
         
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            PrintWriter out = resp.getWriter();
+            ProductsDAO productsDAO= new ProductsDAO();
+            String name = req.getParameter("name");
+            String brand = req.getParameter("brand");
+            String category = req.getParameter("category");
+            double price = Double.parseDouble(req.getParameter("price"));
+            Part filePart = req.getPart("file");
+            String fileName = filePart.getSubmittedFileName();
+            String realPath = req.getServletContext().getRealPath("/static/images/products");
+            filePart.write(realPath + "/" + fileName);
+            String imgLink = "./static/images/products/"+fileName;
+            
+            Product product = new Product( name, brand, imgLink, "T", category, price);
+            if(productsDAO.createProduct(product)){
+                ArrayList<Product> products = productsDAO.getAllProducts();
+                String data = getDataString(products);            
+                out.println(data);
+            }else{
+                resp.setStatus(500);
+                out.flush();
+            }       
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -95,8 +125,9 @@ public class ProductsServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             ProductsDAO productsDAO = new ProductsDAO();
@@ -106,6 +137,9 @@ public class ProductsServlet extends HttpServlet {
             }
             if (!request.getParameter("brand").isEmpty()){
                 product.setBrand(request.getParameter("brand"));
+            }
+              if (!request.getParameter("category").isEmpty()){
+                product.setCategory(request.getParameter("category"));
             }
             if (!request.getParameter("price").isEmpty()){
                 product.setPrice(Double.parseDouble(request.getParameter("price")));
@@ -117,11 +151,15 @@ public class ProductsServlet extends HttpServlet {
             if (fileName != null){
                 product.setImgLink("./static/images/products/"+fileName);
             }
-            productsDAO.updateProduct(product);
-            ArrayList<Product> products = productsDAO.getAllProducts();
-            String data = getDataString(products);
-            PrintWriter out = response.getWriter();
-            out.println(data);
+          
+             if(productsDAO.updateProduct(product)){
+                ArrayList<Product> products = productsDAO.getAllProducts();
+                String data = getDataString(products);            
+                out.println(data);
+            }else{
+                response.setStatus(500);
+                out.flush();
+            }    
         } catch (SQLException ex) {
             Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -139,17 +177,18 @@ public class ProductsServlet extends HttpServlet {
         for (Product product : products) {
             data += " <div class=\"d-flex border-bottom mt-2 justify-content-between align-items-center\">\n"
                     + "                                <div class=\"d-flex align-items-center\" style=\"width: 50%\">\n"
-                    + "                                    <img src=\""+product.getImgLink()+"\" alt=\"alt\" class=\"img-fluid\" style=\"width: 150px; height: 150px\"/>\n"
+                    + "                                    <img src=\"" + product.getImgLink() + "\" alt=\"alt\" class=\"img-fluid\" style=\"width: 150px; height: 150px\"/>\n"
                     + "                                    <div>\n"
-                    + "                                        <h5 class=\"text-capitalize\" style=\"font-size: 20px\">"+product.getName()+"</h5>\n"
-                    + "                                        <h6 class=\" text-capitalize text-start\" style=\"font-size: 14px\">"+product.getBrand()+"</h6>\n"
+                    + "                                        <h5 class=\"text-capitalize\" style=\"font-size: 20px\">" + product.getName() + "</h5>\n"
+                    + "                                        <h6 class=\" text-capitalize text-start\" style=\"font-size: 14px\">" + product.getBrand() + "</h6>\n"
+                    + "                                         <h6 class=\" text-capitalize text-start\" style=\"font-size: 12px\">" + product.getCategory() + "</h6>\n"
                     + "                                    </div>               \n"
                     + "                                </div>\n"
-                    + "                                <h5 class=\"text-capitalize\"  style=\"font-size: 26px\">$"+product.getPrice()+"</h5>\n"
-                    + "                                <button class=\"btn btn-primary \" style=\"padding: 12px; font-size: 16px\" data-bs-toggle=\"modal\" href=\"#exampleModalToggle"+product.getId()+"\">Update</button>\n"
+                    + "                                <h5 class=\"text-capitalize\"  style=\"font-size: 26px\">$" + product.getPrice() + "</h5>\n"
+                    + "                                <button class=\"btn btn-primary \" style=\"padding: 12px; font-size: 16px\" data-bs-toggle=\"modal\" href=\"#exampleModalToggle" + product.getId() + "\">Update</button>\n"
                     + "                            </div>\n"
                     + "\n"
-                    + "                            <div class=\"modal fade \" id=\"exampleModalToggle"+product.getId()+"\" tabindex=\"-1\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\n"
+                    + "                            <div class=\"modal fade \" id=\"exampleModalToggle" + product.getId() + "\" tabindex=\"-1\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\n"
                     + "                                <div class=\"modal-dialog modal-dialog-centered \">\n"
                     + "                                    <div class=\"modal-content \">\n"
                     + "                                        <div class=\"modal-header\">\n"
@@ -160,6 +199,7 @@ public class ProductsServlet extends HttpServlet {
                     + "                              \n"
                     + "                                            <input type=\"text\" id=\"name-"+product.getId()+"\" name=\"name\" placeholder=\"Enter name\" class=\"form-control mb-2\">\n"
                     + "                                            <input type=\"text\" id=\"brand-"+product.getId()+"\" name=\"brand\" placeholder=\"Enter brand\" class=\"form-control mb-2\">\n"
+                   + "                                             <input type=\"text\" id=\"category-"+product.getId()+"\" name=\"category\" placeholder=\"Enter category\" class=\"form-control mb-2\">\n"
                     + "                                            <input type=\"text\" id=\"price-"+product.getId()+"\" name=\"price\" placeholder=\"Enter price\" class=\"form-control mb-2\">\n"
                     + "                                            <div class=\"input-group mb-2\">\n"
                     + "                                                <label class=\"input-group-text\" for=\"inputGroupFile01\">Upload</label>\n"

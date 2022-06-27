@@ -203,13 +203,14 @@ public class ProductsDAO {
      
     public boolean updateProduct(Product product){
         try {
-            String sql = "update products set name = ? , brand = ?, price = ?, imgLink = ? where product_id = ?";
+            String sql = "update products set name = ? , brand = ?, price = ?, imgLink = ?, category = ? where product_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, product.getName());
             ps.setString(2, product.getBrand());
             ps.setDouble(3, product.getPrice());
             ps.setString(4, product.getImgLink());
-            ps.setInt(5, product.getId());
+            ps.setString(5, product.getCategory());
+            ps.setInt(6, product.getId());
             ps.execute();
             return true;
         } catch (SQLException ex) {
@@ -218,4 +219,21 @@ public class ProductsDAO {
         }
     }
     
+    public boolean createProduct(Product product){
+        try {
+            String sql = "insert into products values(?,?,?,?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getBrand());
+            ps.setDouble(3, product.getPrice());
+            ps.setString(4, product.getImgLink());
+            ps.setString(5, product.getAvailabe());
+            ps.setString(6, product.getCategory());
+            ps.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
 }

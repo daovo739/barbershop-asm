@@ -23,7 +23,7 @@
                 <h1 class="section-title bg-white text-dark"style="padding: 0; margin-bottom: 0">Products</h1>
                 <section>
                     <div class="btn-container d-flex" >
-                        <button class="btn btn-primary ">Add product</button>
+                        <button class="btn btn-primary " data-bs-toggle="modal" href="#exampleModalToggleCreate">Create product</button>
                         <input type="text" id="id" value="" class="bg-dark text-white rounded ps-2 ms-2" placeholder="Search here!" style="width: 300px">
                     </div>
                     <hr>
@@ -35,6 +35,7 @@
                                     <div>
                                         <h5 class="text-capitalize" style="font-size: 20px">${product.getName()}</h5>
                                         <h6 class=" text-capitalize text-start" style="font-size: 14px">${product.getBrand()}</h6>
+                                        <h6 class=" text-capitalize text-start" style="font-size: 12px">${product.getCategory()}</h6>
                                     </div>               
                                 </div>
                                 <h5 class="text-capitalize"  style="font-size: 26px">$${product.getPrice()}</h5>
@@ -52,6 +53,7 @@
                               
                                             <input type="text" id="name-${product.getId()}" name="name" placeholder="Enter name" class="form-control mb-2">
                                             <input type="text" id="brand-${product.getId()}" name="brand" placeholder="Enter brand" class="form-control mb-2">
+                                             <input type="text" id="category-${product.getId()}" name="category" placeholder="Enter category" class="form-control mb-2">
                                             <input type="text" id="price-${product.getId()}" name="price" placeholder="Enter price" class="form-control mb-2">
                                             <div class="input-group mb-2">
                                                 <label class="input-group-text" for="inputGroupFile01">Upload</label>
@@ -69,6 +71,32 @@
                         </c:forEach>
                     </div>
                 </section>
+            </div>
+
+            <div class="modal fade " id="exampleModalToggleCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered ">
+                    <div class="modal-content ">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Create New Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form class="modal-body"  enctype="multipart/form-data">
+                            <input type="text" id="name-create" name="name" placeholder="Enter name" class="form-control mb-2">
+                            <input type="text" id="brand-create" name="brand" placeholder="Enter brand" class="form-control mb-2">
+                            <input type="text" id="category-create" name="category" placeholder="Enter category" class="form-control mb-2">
+                            <input type="text" id="price-create" name="price" placeholder="Enter price" class="form-control mb-2">
+                            <div class="input-group mb-2">
+                                <label class="input-group-text" for="inputGroupFile01">Upload</label>
+                                <input type="file" id="ajaxfile-create" class="form-control">
+                            </div>
+
+                        </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary close-modal-create" data-bs-dismiss="modal">Close</button>
+                            <button  type="button" class="btn btn-primary" onclick="createProduct()">Create</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
