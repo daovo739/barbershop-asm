@@ -54,9 +54,9 @@ public class BookingDAO {
     
     public boolean  insertBooking(Booking booking){
         try {
-            String sql = "Insert into booking values(? , ? , ? , ? , ?)";
+            String sql = "Insert into booking (booking_phone, booking_name, booking_service, booking_date, booking_note) values(? , ? , ? , ? , ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, booking.getBookingEmail());
+            ps.setString(1, booking.getBookingPhone());
             ps.setString(2, booking.getBookingName());
             ps.setString(3, booking.getBookingService());
             ps.setString(4, booking.getBookingDate());

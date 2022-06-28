@@ -33,8 +33,9 @@ const updateProduct =  (ele) => {
             enctype: 'multipart/form-data',
             data: data,
             success: function (results) {
-//                document.querySelector(".close-modal").classList.add("toastTrigger");
-                document.querySelector(".close-modal").click();
+                document.querySelectorAll(".close-modal").forEach((item) => {
+                    item.click();
+                });
                 document.querySelector(".products-container").innerHTML = results;
                 document.querySelector(".toast-body-admin").textContent = "Update successfully!";            
                 toast.show();
@@ -75,7 +76,9 @@ const createProduct =  () => {
             enctype: 'multipart/form-data',
             data: data,
             success: function (results) {
-                document.querySelector(".close-modal-create").click();
+                document.querySelectorAll(".close-modal").forEach((item) => {
+                    item.click();
+                });
                 document.querySelector(".products-container").innerHTML = results;
                 document.querySelector(".toast-body-admin").textContent = "Create successfully!";            
                 toast.show();
@@ -88,4 +91,45 @@ const createProduct =  () => {
             }
         });
     }
+};
+
+const deleteProduct = (ele) => {
+    const id = ele.getAttribute("data-id");
+    $.ajax({
+        url: "/barbershop/productsAdmin" + "?" + $.param({id}),
+        type: "DELETE",
+        success: function (results) {
+            document.querySelectorAll(".close-modal").forEach((item) => {
+                    item.click();
+                });
+            document.querySelector(".products-container").innerHTML = results;
+            document.querySelector(".toast-body-admin").textContent = "Delete successfully!";
+            toast.show();
+//                            console.log(results);
+        },
+        error: function (error) {
+            document.querySelector(".toast-body-admin").textContent = "Delete failed!";
+            toast.show();
+            console.log(error);
+        }
+    });
+
+};
+
+const searchListAdmin = (value) => {
+    if (value) {
+        $.ajax({
+            url: "/barbershop/searchAdmin",
+            type: "POST",
+            data: {
+                search: value
+            },
+            success: function (results) {
+                document.querySelector(".products-container").innerHTML = results;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });       
+    } 
 };

@@ -17,19 +17,19 @@ import java.util.logging.Logger;
 public class Booking {
     
     private int bookingId;
-    private String bookingEmail, bookingName, bookingService, bookingDate, bookingNote;
+    private String bookingPhone, bookingName, bookingService, bookingDate, bookingNote;
 
-    public Booking(String bookingEmail, String bookingName, String bookingService, String bookingDate, String bookingNote) {
-        this.bookingEmail = bookingEmail;
+    public Booking(String bookingPhone, String bookingName, String bookingService, String bookingDate, String bookingNote) {
+        this.bookingPhone = bookingPhone;
         this.bookingName = bookingName;
         this.bookingService = bookingService;
         this.bookingDate = bookingDate;
         this.bookingNote = bookingNote;
     }
 
-    public Booking(int bookingId, String bookingEmail, String bookingName, String bookingService, Date bookingDate, String bookingNote) {
+    public Booking(int bookingId, String bookingPhone, String bookingName, String bookingService, Date bookingDate, String bookingNote) {
         this.bookingId = bookingId;
-        this.bookingEmail = bookingEmail;
+        this.bookingPhone = bookingPhone;
         this.bookingName = bookingName;
         this.bookingService = bookingService;
         setBookingDate(bookingDate);
@@ -44,12 +44,12 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
-    public String getBookingEmail() {
-        return bookingEmail;
+    public String getBookingPhone() {
+        return bookingPhone;
     }
 
-    public void setBookingEmail(String bookingEmail) {
-        this.bookingEmail = bookingEmail;
+    public void setBookingPhone(String bookingPhone) {
+        this.bookingPhone = bookingPhone;
     }
 
     public String getBookingName() {
@@ -96,7 +96,7 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking{" + "bookingEmail=" + bookingEmail + ", bookingName=" + bookingName + ", bookingService=" + bookingService + ", bookingDate=" + getBookingDate() + ", bookingNote=" + bookingNote + '}';
+        return "Booking{" + "bookingPhone=" + bookingPhone + ", bookingName=" + bookingName + ", bookingService=" + bookingService + ", bookingDate=" + getBookingDate() + ", bookingNote=" + bookingNote + '}';
     }
 
     

@@ -5,6 +5,7 @@
 package controller.admin;
 
 import DAO.ProductsDAO;
+import controller.GetProductsServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -12,24 +13,16 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 import model.Product;
 
 /**
  *
- * @author HHPC
+ * @author Admin
  */
-@MultipartConfig(
-  fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
-  maxFileSize = 1024 * 1024 * 10,      // 10 MB
-  maxRequestSize = 1024 * 1024 * 100   // 100 MB
-)
-public class ProductsServlet extends HttpServlet {
+public class FilteringProductsAdmin extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,10 +41,10 @@ public class ProductsServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProductsServlet</title>");            
+            out.println("<title>Servlet FilteringProductsAdmin</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProductsServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet FilteringProductsAdmin at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,54 +62,9 @@ public class ProductsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            ProductsDAO productsDAO = new ProductsDAO();
-            ArrayList<Product> products = productsDAO.getAllProducts();
-            if (products == null) {
-                request.setAttribute("msg", "Product List Is Empty");
-                request.getRequestDispatcher("productsAdmin.jsp").forward(request, response);
-            } else {
-                session.setAttribute("productsAdmin", products);
-                response.sendRedirect("productsAdmin.jsp");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        processRequest(request, response);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            PrintWriter out = resp.getWriter();
-            ProductsDAO productsDAO= new ProductsDAO();
-            String name = req.getParameter("name");
-            String brand = req.getParameter("brand");
-            String category = req.getParameter("category");
-            double price = Double.parseDouble(req.getParameter("price"));
-            Part filePart = req.getPart("file");
-            String fileName = filePart.getSubmittedFileName();
-            String realPath = req.getServletContext().getRealPath("/static/images/products");
-            System.out.println(realPath + "\\" + fileName);
-            String imgLink = "./static/images/products/"+fileName;
-            
-            Product product = new Product( name, brand, imgLink, "T", category, price);
-            if(productsDAO.createProduct(product)){
-                ArrayList<Product> products = productsDAO.getAllProducts();
-                String data = getDataString(products);         
-                filePart.write(realPath + "\\" + fileName);
-                out.println(data);
-            }else{
-                resp.setStatus(500);
-                out.flush();
-            }       
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -126,43 +74,21 @@ public class ProductsServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
+        ArrayList<Product> products = null;
         try {
-            int id = Integer.parseInt(request.getParameter("id"));
-            ProductsDAO productsDAO = new ProductsDAO();
-            Product product = productsDAO.getProductById(id);
-            if (!request.getParameter("name").isEmpty()){
-                product.setName(request.getParameter("name"));
-            }
-            if (!request.getParameter("brand").isEmpty()){
-                product.setBrand(request.getParameter("brand"));
-            }
-              if (!request.getParameter("category").isEmpty()){
-                product.setCategory(request.getParameter("category"));
-            }
-            if (!request.getParameter("price").isEmpty()){
-                product.setPrice(Double.parseDouble(request.getParameter("price")));
-            }
-            Part filePart = request.getPart("file");
-            String fileName = filePart.getSubmittedFileName();
-            String realPath = request.getServletContext().getRealPath("/static/images/products");
-            filePart.write(realPath+"/"+fileName);
-            if (fileName != null){
-                product.setImgLink("./static/images/products/"+fileName);
-            }
-          
-             if(productsDAO.updateProduct(product)){
-                ArrayList<Product> products = productsDAO.getAllProducts();
-                String data = getDataString(products);            
+            ProductsDAO db = new ProductsDAO();
+            String search = request.getParameter("search");
+            products = db.getProductsSearching(search);        
+            if (products != null) {
+                String data = getDataString(products);
                 out.println(data);
-            }else{
-                response.setStatus(500);
-                out.flush();
-            }    
+            }
+
         } catch (SQLException ex) {
-            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GetProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -173,27 +99,7 @@ public class ProductsServlet extends HttpServlet {
      * @return a String containing servlet description
      */
     
-    
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
-        try {
-            int id = Integer.parseInt(req.getParameter("id"));
-            ProductsDAO productsDAO = new ProductsDAO();
-            if (productsDAO.deleteProduct(id)) {
-                ArrayList<Product> products = productsDAO.getAllProducts();
-                String data = getDataString(products);
-                out.println(data);
-            } else {
-                resp.setStatus(500);
-                out.flush();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public String getDataString(ArrayList<Product> products) {
+      public String getDataString(ArrayList<Product> products) {
         String data = "";
         for (Product product : products) {
             data += " <div class=\"d-flex border-bottom mt-2 justify-content-between align-items-center\">\n"

@@ -86,25 +86,25 @@
 
             <section class="section-booking" id="booking">
                 <h1 class="section-title">Booking</h1>
-                <form class="row" action="sendEmail" method="POST">
+                <form class="row" id="form-booking">
                     <div class="col-lg-6">
                         <div class="mb-3">
-                            <input type="email" class="form-control bg-dark text-white" id="formGroupExampleInput" placeholder="Enter your email" name="booking-email" required>
+                            <input type="tel" class="form-control bg-dark text-white" id="booking-phone" placeholder="Enter your phone number" name="booking-phone" pattern="(84|0[3|5|7|8|9])+([0-9]{8})\b" required>
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control bg-dark text-white" id="formGroupExampleInput2" placeholder="Enter your name" name="booking-name" required>
+                            <input type="text" class="form-control bg-dark text-white" id="booking-name" placeholder="Enter your name" name="booking-name" required>
                         </div>
-                        <select class="form-select  mb-3 bg-dark text-white" aria-label=".form-select-lg example" name="booking-service" required>
+                        <select class="form-select  mb-3 bg-dark text-white" aria-label=".form-select-lg example" id="booking-service" name="booking-service" required>
                             <option value="">Choose Service</option>
                             <option value="Full Combo">Full Combo</option>
                             <option value="Cut and Wash">Cut + Wash Hair</option>
                             <option value="Cut">Cut Hair</option>
                         </select>
                         <div class="mb-3">
-                            <input type="date" min = "${dateLimit}" class="form-control bg-dark text-white" id="formGroupExampleInput2" placeholder="Enter booking date" name="booking-date" required>
+                            <input type="date" min = "${dateLimit}" class="form-control bg-dark text-white" id="booking-date" placeholder="Enter booking date" name="booking-date" required>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control bg-dark text-white" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="booking-note"></textarea>
+                            <textarea class="form-control bg-dark text-white" placeholder="Leave a comment here" id="booking-note" style="height: 100px" name="booking-note"></textarea>
                             <label for="floatingTextarea2" class="text-white">Note</label>
                         </div>
                     </div>
@@ -114,7 +114,7 @@
                             <div class="row">
                                 <c:forEach begin="0" end="2">
                                     <div class="col-lg-4 d-flex align-items-center">
-                                        <input type="radio" id="${startTime}" name="booking-time" value="${startTime}:00" required>   
+                                        <input type="radio" id="${startTime}" name="booking-time" value="${startTime}:00" class="booking-time-input" required>   
                                         <label for="${startTime}" class="booking-time">${startTime}:00</label>                              
                                     </div>
                                     <c:set var="startTime" value="${startTime+1}"></c:set>
@@ -122,7 +122,7 @@
                             </div>
                         </c:forEach>
                         <div class="mb-3">
-                            <input type="submit" class="form-control btn-secondary" id="formGroupExampleInput" value="Booking" required>
+                            <input class="form-control btn-secondary " id="formGroupExampleInput" value="Booking" onclick="booking()" required>
                         </div>
                     </div>
                 </form>
@@ -157,5 +157,62 @@
             </section>
         </main>
         <jsp:include page="layout/footer.jsp"/>
+        <div class="position-fixed top-50 end-0 p-3" style="z-index: 11" >
+            <div id="liveToastIndex" class="toast " role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000">
+                <div class="toast-header ">
+                    <strong class="me-auto text-success">Notification</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body toast-body-index">
+                </div>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+        <script>
+            const toastLiveExample = document.getElementById('liveToastIndex');
+            const toast = new bootstrap.Toast(toastLiveExample);
+            
+            const booking =  () => {
+                const phone = document.querySelector("#booking-phone").value;
+                const name = document.querySelector("#booking-name").value;
+                const service = document.querySelector("#booking-service").value;
+                const date = document.querySelector("#booking-date").value;
+                let time;
+                document.querySelectorAll(".booking-time-input").forEach((item) => {
+                    if (item.checked){
+                        time = item.value;
+                    }
+                });
+                const note = document.querySelector("#booking-note").value || "";
+
+                if (!phone && !name && !service && !date &&!time){
+                    console.log("empty");
+                }else{
+                    $.ajax({
+                    url: "/barbershop/bookingAdmin",
+                    type: "POST",
+                    data: {
+                        "booking-phone": phone,
+                        "booking-name": name,
+                        "booking-service": service,
+                        "booking-date": date,
+                        "booking-time": time,
+                        "booking-note": note
+                    },
+                    success: function (results) {
+                        document.querySelector(".toast-body-index").textContent = results;            
+                        toast.show();
+        //                            console.log(results);
+                    },
+                    error: function (error) {
+                        document.querySelector(".toast-body-index").textContent = "Booking failed!";
+                        toast.show();
+                        console.log(error);
+                    }
+                    });
+                };
+        };
+        
+        </script>
     </body>
 </html>

@@ -8,6 +8,7 @@ import DAO.BookingDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -15,13 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Booking;
-import utillity.EmailSetUp;
 
 /**
  *
- * @author HHPC
+ * @author Admin
  */
-public class EmailServlet extends HttpServlet {
+public class BookingAdminServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,20 +32,6 @@ public class EmailServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private String host;
-    private String port;
-    private String userName;
-    private String password;
-
-    @Override
-    public void init() throws ServletException {
-        host = getServletContext().getInitParameter("host");
-        port = getServletContext().getInitParameter("port");
-        userName = getServletContext().getInitParameter("userName");
-        password = getServletContext().getInitParameter("password");
-    }
-    
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -54,10 +40,10 @@ public class EmailServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EmailServlet</title>");            
+            out.println("<title>Servlet BookingServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EmailServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet BookingServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -75,7 +61,21 @@ public class EmailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            BookingDAO bookingDAO = new BookingDAO();
+            ArrayList<Booking> bookings = bookingDAO.getBookings();
+            if (!bookings.isEmpty()){
+                request.setAttribute("bookings", bookings);
+                request.getRequestDispatcher("bookingAdmin.jsp").forward(request, response);
+            }else{
+                request.setAttribute("msgBooking", "The booking list is empty");
+                request.getRequestDispatcher("bookingAdmin.jsp").forward(request, response);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingAdminServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -90,7 +90,8 @@ public class EmailServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String bookingEmail = request.getParameter("booking-email");
+            PrintWriter out = response.getWriter();
+            String bookingPhone = request.getParameter("booking-phone");
             String bookingName = request.getParameter("booking-name");
             String bookingService = request.getParameter("booking-service");
             String bookingDay = request.getParameter("booking-date");
@@ -100,21 +101,21 @@ public class EmailServlet extends HttpServlet {
                 bookingNote = request.getParameter("booking-note");
             }
             String bookingDate = bookingDay + " " + bookingTime + ":00";
-            Booking booking = new Booking(bookingEmail, bookingName, bookingService, bookingDate, bookingNote);
+            Booking booking = new Booking(bookingPhone, bookingName, bookingService, bookingDate, bookingNote);
+            System.out.println(booking);
             BookingDAO bookingDAO = new BookingDAO();
-            bookingDAO.insertBooking(booking);
-//            EmailSetUp emailSetUp = new EmailSetUp(host, port, userName, password);
-//            System.out.println(emailSetUp);
-//            if (emailSetUp.sendMail(bookingEmail, "Booking at barbershop", "Thanks for booking in my barbershop")){
-//                System.out.println("success");
-//            }else{
-//                System.out.println("error");
-//            }
+            
+            if (bookingDAO.insertBooking(booking)){
+                out.println("Thanks for your booking");
+            }else{
+                response.setStatus(500);
+                out.flush();
+            }
+            
             
         } catch (SQLException ex) {
             Logger.getLogger(EmailServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
     /**

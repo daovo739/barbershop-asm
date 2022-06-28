@@ -4,7 +4,6 @@ package controller;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 import DAO.CartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,13 +38,16 @@ public class LoadDataServlet extends HttpServlet {
             CartDAO cartDAO = new CartDAO();
             Cookie[] cookies = request.getCookies();
             boolean isHaveCooky = false;
-            for (Cookie cooky : cookies) {
-                if (cooky.getName().equals("userId")) {
-                    userId = Integer.parseInt(cooky.getValue());
-                    isHaveCooky = true;
-                    break;
+            if (cookies != null) {
+                for (Cookie cooky : cookies) {
+                    if (cooky.getName().equals("userId")) {
+                        userId = Integer.parseInt(cooky.getValue());
+                        isHaveCooky = true;
+                        break;
+                    }
                 }
             }
+
             if (isHaveCooky) {
                 int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userId));
                 request.getSession().setAttribute("cartCount", countProduct);
@@ -55,8 +57,6 @@ public class LoadDataServlet extends HttpServlet {
             Logger.getLogger(LoadDataServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

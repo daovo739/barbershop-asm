@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <context-param>
-        <param-name>host</param-name>
-        <param-value>smtp.gmail.com</param-value>
-    </context-param>
-    <context-param>
-        <param-name>port</param-name>
-        <param-value>587</param-value>
-    </context-param>
-    <context-param>
-        <param-name>userName</param-name>
-        <param-value>vodao9889@gmail.com</param-value>
-    </context-param>
-    <context-param>
-        <param-name>password</param-name>
-        <param-value>Anh123555</param-value>
-    </context-param>
     <servlet>
         <servlet-name>GetProductsHomeServlet</servlet-name>
         <servlet-class>controller.GetProductsHomeServlet</servlet-class>
@@ -60,6 +44,14 @@
         <servlet-name>EmailServlet</servlet-name>
         <servlet-class>controller.admin.EmailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FilteringProductsAdmin</servlet-name>
+        <servlet-class>controller.admin.FilteringProductsAdmin</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingServlet</servlet-name>
+        <servlet-class>controller.admin.BookingAdminServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GetProductsHomeServlet</servlet-name>
         <url-pattern>/GetProductsHomeServlet</url-pattern>
@@ -103,6 +95,14 @@
     <servlet-mapping>
         <servlet-name>EmailServlet</servlet-name>
         <url-pattern>/sendEmail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilteringProductsAdmin</servlet-name>
+        <url-pattern>/searchAdmin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingServlet</servlet-name>
+        <url-pattern>/bookingAdmin</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

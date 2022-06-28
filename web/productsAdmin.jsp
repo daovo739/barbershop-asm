@@ -24,11 +24,11 @@
                 <section>
                     <div class="btn-container d-flex" >
                         <button class="btn btn-primary " data-bs-toggle="modal" href="#exampleModalToggleCreate">Create product</button>
-                        <input type="text" id="id" value="" class="bg-dark text-white rounded ps-2 ms-2" placeholder="Search here!" style="width: 300px">
+                        <input type="text" id="id" class="bg-dark text-white rounded ps-2 ms-2" placeholder="Search here!" style="width: 300px" oninput="searchListAdmin(this.value)">
                     </div>
                     <hr>
                     <div class="d-flex flex-column products-container container" style="overflow-y: scroll; max-height: 700px">
-                        <c:forEach var="product" items="${products}">
+                        <c:forEach var="product" items="${productsAdmin}">
                             <div class="d-flex border-bottom mt-2 justify-content-between align-items-center">
                                 <div class="d-flex align-items-center" style="width: 50%">
                                     <img src="${product.getImgLink()}" alt="alt" class="img-fluid" style="width: 150px; height: 150px"/>
@@ -39,35 +39,58 @@
                                     </div>               
                                 </div>
                                 <h5 class="text-capitalize"  style="font-size: 26px">$${product.getPrice()}</h5>
-                                <button class="btn btn-primary " style="padding: 12px; font-size: 16px" data-bs-toggle="modal" href="#exampleModalToggle${product.getId()}">Update</button>
+                                <div class="d-flex flex-column justify-content-between">
+                                    <button class="btn btn-primary mb-2" style="padding: 12px; font-size: 16px" data-bs-toggle="modal" href="#exampleModalToggle${product.getId()}">Update</button>
+                                    <button class="btn btn-danger " style="padding: 12px; font-size: 16px" data-bs-toggle="modal" href="#exampleModalToggleDelete${product.getId()}">Delete</button>
+                                </div>
+                               
                             </div>
 
-                            <div class="modal fade " id="exampleModalToggle${product.getId()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered ">
-                                    <div class="modal-content ">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Update product <strong>#${product.getId()}</strong></h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form class="modal-body" id="form-product-${product.getId()}" enctype="multipart/form-data">
-                              
-                                            <input type="text" id="name-${product.getId()}" name="name" placeholder="Enter name" class="form-control mb-2">
-                                            <input type="text" id="brand-${product.getId()}" name="brand" placeholder="Enter brand" class="form-control mb-2">
-                                             <input type="text" id="category-${product.getId()}" name="category" placeholder="Enter category" class="form-control mb-2">
-                                            <input type="text" id="price-${product.getId()}" name="price" placeholder="Enter price" class="form-control mb-2">
-                                            <div class="input-group mb-2">
-                                                <label class="input-group-text" for="inputGroupFile01">Upload</label>
-                                                <input type="file" id="ajaxfile-${product.getId()}" class="form-control">
+                                <div class="modal fade " id="exampleModalToggle${product.getId()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered ">
+                                        <div class="modal-content ">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Update product <strong>#${product.getId()}</strong></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
+                                            <form class="modal-body" id="form-product-${product.getId()}" enctype="multipart/form-data">
 
-                                        </form>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary close-modal" data-bs-dismiss="modal">Close</button>
-                                            <button data-id="${product.getId()}" type="button" class="btn btn-primary" onclick="updateProduct(this)">Update</button>
+                                                <input type="text" id="name-${product.getId()}" name="name" placeholder="Enter name" class="form-control mb-2">
+                                                <input type="text" id="brand-${product.getId()}" name="brand" placeholder="Enter brand" class="form-control mb-2">
+                                                <input type="text" id="category-${product.getId()}" name="category" placeholder="Enter category" class="form-control mb-2">
+                                                <input type="text" id="price-${product.getId()}" name="price" placeholder="Enter price" class="form-control mb-2">
+                                                <div class="input-group mb-2">
+                                                    <label class="input-group-text" for="inputGroupFile01">Upload</label>
+                                                    <input type="file" id="ajaxfile-${product.getId()}" class="form-control">
+                                                </div>
+
+                                            </form>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary close-modal" data-bs-dismiss="modal">Close</button>
+                                                <button data-id="${product.getId()}" type="button" class="btn btn-primary" onclick="updateProduct(this)">Update</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+
+                                <div class="modal fade" id="exampleModalToggleDelete${product.getId()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered ">
+                                        <div class="modal-content ">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Delete product <strong>#${product.getId()}</strong></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body" enctype="multipart/form-data">
+                                                <h5>Do you want to delete product <strong>${product.getName()}</strong>?</h5>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary close-modal" data-bs-dismiss="modal">Close</button>
+                                                <button data-id="${product.getId()}" type="button" class="btn btn-primary" onclick="deleteProduct(this)">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                         </c:forEach>
                     </div>
                 </section>
@@ -92,7 +115,7 @@
 
                         </form>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary close-modal-create" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary close-modal" data-bs-dismiss="modal">Close</button>
                             <button  type="button" class="btn btn-primary" onclick="createProduct()">Create</button>
                         </div>
                     </div>

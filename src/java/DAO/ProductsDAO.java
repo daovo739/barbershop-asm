@@ -236,4 +236,17 @@ public class ProductsDAO {
             return false;
         }
     }
+    
+    public boolean deleteProduct(int id){
+        try {
+            String sql = "delete from products where product_id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductsDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
 }
