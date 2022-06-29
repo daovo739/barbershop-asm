@@ -171,7 +171,7 @@ public class CartDAO {
                     + "            <p class=\"fs-3 text\">Total</p>\n"
                     + "            <p class=\"fs-3 text fw-bold\">$" + cart.getTotalCostCart() + "</p>\n"
                     + "        </div>\n"
-                    + "        <button class=\"btn btn-primary\"><a  class=\"text-white text-decoration-none\">Checkout</a></button>\n"
+                    + "        <button class=\"btn btn-primary\"><a  class=\"text-white text-decoration-none\" href=\"checkout\">Checkout</a></button>\n"
                     + "    </div>";
         }
         return data;

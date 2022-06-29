@@ -71,5 +71,24 @@ public class UserDAO {
              return -1;
         }
     }
+    
+     public User getUserById(int id) {
+        try {
+            String sql = "Select * from users where user_id = ? ";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            User user = null ;
+            while (rs.next()) {                
+                String name = rs.getString(2);
+                String email = rs.getString(3);
+                user = new User(id,name, email);
+            }
+            return user;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+             return null;
+        }
+    }
 }
 
