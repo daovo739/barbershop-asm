@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author HHPC
  */
-public class Booking {
+public class Booking implements Comparable<Date>{
     
     private int bookingId;
     private String bookingPhone, bookingName, bookingService, bookingDate, bookingNote;
@@ -27,7 +28,7 @@ public class Booking {
         this.bookingNote = bookingNote;
     }
 
-    public Booking(int bookingId, String bookingPhone, String bookingName, String bookingService, Date bookingDate, String bookingNote) {
+    public Booking(int bookingId, String bookingPhone, String bookingName, String bookingService, Timestamp bookingDate, String bookingNote) {
         this.bookingId = bookingId;
         this.bookingPhone = bookingPhone;
         this.bookingName = bookingName;
@@ -70,7 +71,7 @@ public class Booking {
 
     public String getBookingDate() {
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = formatter.parse(bookingDate);
             String newBookingDate = formatter.format(date);
             return newBookingDate;
@@ -79,13 +80,36 @@ public class Booking {
         }
         return null;
     }
-
-    public void setBookingDate(Date bookingDate) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    
+    public String getBookingDateAllowDay() {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = formatter.parse(bookingDate);
+            String newBookingDate = new SimpleDateFormat("EEEE").format(date) + ", " + formatter.format(date);
+            return newBookingDate;
+        } catch (ParseException ex) {
+            Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public void setBookingDate(Timestamp bookingDate) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String newBookingDate = formatter.format(bookingDate);
         this.bookingDate = newBookingDate;
     }
 
+    public Date getDate() {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = formatter.parse(this.bookingDate);
+            return date;
+        } catch (ParseException ex) {
+            Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public String getBookingNote() {
         return bookingNote;
     }
@@ -97,6 +121,15 @@ public class Booking {
     @Override
     public String toString() {
         return "Booking{" + "bookingPhone=" + bookingPhone + ", bookingName=" + bookingName + ", bookingService=" + bookingService + ", bookingDate=" + getBookingDate() + ", bookingNote=" + bookingNote + '}';
+    }
+
+    public int compareTo() {
+        return new Date().compareTo(getDate());
+    }
+
+    @Override
+    public int compareTo(Date o) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     

@@ -105,8 +105,7 @@
     <script >
         const searchList = (value) => {
             const pagination = document.querySelector("#pagination-container");
-            if (value) {
-                $.ajax({
+                          $.ajax({
                     url: "/barbershop/products",
                     type: "POST",
                     data: {
@@ -119,6 +118,7 @@
                         console.log(error);
                     }
                 });
+            if (value) {
                 pagination.classList.add('d-none');
             } else {
                 pagination.classList.remove('d-none');

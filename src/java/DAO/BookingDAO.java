@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,9 +42,9 @@ public class BookingDAO {
                 String bookingEmail = rs.getString(2);
                 String bookingName = rs.getString(3);
                 String bookingService = rs.getString(4);
-                Date bookingDate = rs.getDate(5);
+                Timestamp timestamp = rs.getTimestamp(5);
                 String bookingNote = rs.getString(6);
-                bookings.add(new Booking(bookingid,bookingEmail, bookingName, bookingService, bookingDate, bookingNote));
+                bookings.add(new Booking(bookingid,bookingEmail, bookingName, bookingService, timestamp, bookingNote));
             }  
             return bookings;
         } catch (SQLException ex) {

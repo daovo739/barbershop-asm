@@ -26,34 +26,47 @@
                         <h2>${msgBooking}</h2>
                     </c:if>
                     <c:if test="${empty msgBooking}">
-                            
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Service</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Note</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="booking" items="${bookings}">
-                                    <tr>
-                                        <th scopt="row">${booking.getBookingId()}</td>
-                                        <td>${booking.getBookingEmail()} </td>
-                                        <td>${booking.getBookingName()} </td>
-                                        <td>${booking.getBookingService()} </td>
-                                        <td>${booking.getBookingDate()} </td>
-                                        <td>${booking.getBookingNote()} </td>
-                                    </tr>
-                                </c:forEach>
+                        <div class="text-white d-flex">
+                            <a href="bookingAdmin" class="text-decoration-none">All</a>
+                            <a href="bookingAdmin?filter=uncompleted" class="text-decoration-none">Uncompleted</a>
+                            <a href="bookingAdmin?filter=completed" class="text-decoration-none">Completed</a>
+                        </div>
+                        <c:forEach var="entry" items="${bookings}">
+                            <div class="mt-3">
+                                <h5>${entry.key}</h5>
+                                <hr>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">PhoneNumber</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Service</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Note</th>
+                                        </tr>
+                                    </thead>
+                                    <c:forEach var="booking" items="${entry.value}">
 
-                            </tbody>
-                        </table>
-                        
-                        
+
+                                        <tbody>
+                                            <tr>
+                                                <th scopt="row">${booking.getBookingId()}</td>
+                                                <td>${booking.getBookingPhone()} </td>
+                                                <td>${booking.getBookingName()} </td>
+                                                <td>${booking.getBookingService()} </td>
+                                                <td>${booking.getBookingDateAllowDay()} </td>
+                                                <td>${booking.getBookingNote()} </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </c:forEach>
+                                </table>
+                            </div> 
+                        </c:forEach>
+
+
+
                     </c:if>
                 </section>
             </div>

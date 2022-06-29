@@ -117,7 +117,6 @@ const deleteProduct = (ele) => {
 };
 
 const searchListAdmin = (value) => {
-    if (value) {
         $.ajax({
             url: "/barbershop/searchAdmin",
             type: "POST",
@@ -131,5 +130,4 @@ const searchListAdmin = (value) => {
                 console.log(error);
             }
         });       
-    } 
 };

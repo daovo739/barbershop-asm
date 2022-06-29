@@ -89,7 +89,7 @@
                 <form class="row" id="form-booking">
                     <div class="col-lg-6">
                         <div class="mb-3">
-                            <input type="tel" class="form-control bg-dark text-white" id="booking-phone" placeholder="Enter your phone number" name="booking-phone" pattern="(84|0[3|5|7|8|9])+([0-9]{8})\b" required>
+                            <input type="tel" class="form-control bg-dark text-white" id="booking-phone" placeholder="Enter your phone number" name="booking-phone"  required>
                         </div>
                         <div class="mb-3">
                             <input type="text" class="form-control bg-dark text-white" id="booking-name" placeholder="Enter your name" name="booking-name" required>
@@ -122,7 +122,7 @@
                             </div>
                         </c:forEach>
                         <div class="mb-3">
-                            <input class="form-control btn-secondary " id="formGroupExampleInput" value="Booking" onclick="booking()" required>
+                            <button class="form-control btn-secondary text-center"  onclick="booking()">Booking</button>
                         </div>
                     </div>
                 </form>
@@ -185,7 +185,9 @@
                 });
                 const note = document.querySelector("#booking-note").value || "";
 
-                if (!phone && !name && !service && !date &&!time){
+                if (!phone || !name || !service || !date || !time || !phone.match(/^(84|\+84|0)\d{9,10}$/g)){
+                    document.querySelector(".toast-body-index").textContent = "Please fill input correct!";            
+                    toast.show();
                     console.log("empty");
                 }else{
                     $.ajax({
@@ -202,7 +204,7 @@
                     success: function (results) {
                         document.querySelector(".toast-body-index").textContent = results;            
                         toast.show();
-        //                            console.log(results);
+                        console.log(results);
                     },
                     error: function (error) {
                         document.querySelector(".toast-body-index").textContent = "Booking failed!";
