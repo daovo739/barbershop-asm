@@ -122,7 +122,7 @@
                             </div>
                         </c:forEach>
                         <div class="mb-3">
-                            <button class="form-control btn-secondary text-center"  onclick="booking()">Booking</button>
+                            <button type="button" class="form-control btn-secondary text-center" onclick="booking()">Booking</button>
                         </div>
                     </div>
                 </form>
@@ -212,6 +212,7 @@
                         console.log(error);
                     }
                     });
+
                 };
         };
         

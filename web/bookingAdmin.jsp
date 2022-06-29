@@ -26,13 +26,14 @@
                         <h2>${msgBooking}</h2>
                     </c:if>
                     <c:if test="${empty msgBooking}">
-                        <div class="text-white d-flex">
-                            <a href="bookingAdmin" class="text-decoration-none">All</a>
-                            <a href="bookingAdmin?filter=uncompleted" class="text-decoration-none">Uncompleted</a>
-                            <a href="bookingAdmin?filter=completed" class="text-decoration-none">Completed</a>
+                        
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <a href="bookingAdmin" type="button" class="btn btn-outline-primary">All</a>
+                            <a href="bookingAdmin?filter=uncompleted" type="button" class="btn btn-outline-primary">Uncompleted</a>
+                            <a href="bookingAdmin?filter=completed" type="button" class="btn btn-outline-primary">Completed</a>
                         </div>
                         <c:forEach var="entry" items="${bookings}">
-                            <div class="mt-3">
+                            <div class="mt-5">
                                 <h5>${entry.key}</h5>
                                 <hr>
                                 <table class="table table-striped">

@@ -35,7 +35,7 @@ public class BookingDAO {
     public ArrayList<Booking>  getBookings(){
         try {
             ArrayList<Booking> bookings = new ArrayList<>();
-            String sql = "SELECT * FROM booking";
+            String sql = "SELECT * FROM booking order by booking_date asc";
             rs = stm.executeQuery(sql);
             while(rs.next()){
                 int bookingid = rs.getInt(1);

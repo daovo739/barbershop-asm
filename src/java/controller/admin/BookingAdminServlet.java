@@ -5,14 +5,18 @@
 package controller.admin;
 
 import DAO.BookingDAO;
+import com.sun.source.tree.Tree;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -72,25 +76,26 @@ public class BookingAdminServlet extends HttpServlet {
             BookingDAO bookingDAO = new BookingDAO();
             ArrayList<Booking> bookings = bookingDAO.getBookings();
             if (!bookings.isEmpty()) {
-                HashMap<String, ArrayList<Booking>> bookingMap = classifyBooking(bookings);
+                TreeMap<String, ArrayList<Booking>> bookingMap = classifyBooking(bookings);
                 Date today = new Date();
                 if (request.getParameter("filter") != null) {
                     String filter = request.getParameter("filter");
-                    if (filter.equalsIgnoreCase("completed")){
+                    if (filter.equalsIgnoreCase("completed")) {
                         for (String key : bookingMap.keySet()) {
-                            Iterator<Booking> itr =     bookingMap.get(key).iterator();
-                            while(itr.hasNext()){
+                            Iterator<Booking> itr = bookingMap.get(key).iterator();
+                            while (itr.hasNext()) {
                                 Booking booking = itr.next();
-                                if (booking.compareTo() < 0){
+                                if (booking.compareTo() < 0) {
                                     itr.remove();
                                 }
+                                
                             }
                         }
 
                     } else {
                         for (String key : bookingMap.keySet()) {
-                            Iterator<Booking> itr =     bookingMap.get(key).iterator();
-                            while(itr.hasNext()){
+                            Iterator<Booking> itr = bookingMap.get(key).iterator();
+                            while (itr.hasNext()) {
                                 Booking booking = itr.next();
                                 if (booking.compareTo() >= 0) {
                                     itr.remove();
@@ -105,6 +110,12 @@ public class BookingAdminServlet extends HttpServlet {
                         if (set.getValue().isEmpty()) {
                             it.remove();
                         }
+//                        Collections.sort(set.getValue(), new Comparator<Booking>() {
+//                            @Override
+//                            public int compare(Booking o1, Booking o2) {
+//                                return o1.getDate().compareTo(o2.getDate());
+//                            }
+//                        });
                     }
                 }
                 request.setAttribute("bookings", bookingMap);
@@ -169,17 +180,18 @@ public class BookingAdminServlet extends HttpServlet {
      * @return a String containing servlet description
      */
     
-     public HashMap<String, ArrayList<Booking>> classifyBooking(ArrayList<Booking> bookings){
-        HashMap<String, ArrayList<Booking>> bookingMap = new HashMap<>();
-        
-//        ArrayList<String> dates = new ArrayList<>();
+     public TreeMap<String, ArrayList<Booking>> classifyBooking(ArrayList<Booking> bookings){
+        TreeMap<String, ArrayList<Booking>> bookingMap = new TreeMap<>();
+
          for (Booking booking : bookings) {
              String date = booking.getBookingDate().split(" ")[0];
+             System.out.println(date);
              if (!bookingMap.containsKey(date)){
                  bookingMap.put(date, new ArrayList<Booking>());
              }
          }
          
+         System.out.println(bookingMap);
          for (String key : bookingMap.keySet()) {
              for (Booking booking : bookings) {
                  String dateBooking = booking.getBookingDate().split(" ")[0];
