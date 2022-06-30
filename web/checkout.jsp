@@ -26,35 +26,35 @@
                         <div>
                             <h3 class="text-white text-capitalize">Contact information</h3>
                             <div class="d-flex flex-column text-white ">
-                                <label for="checkout-email " class="form-label" name="checkout-mail">Email address</label>
-                                <input type="text" id="checkout-email" value="${user.getEmail()}" class="form-control" required>
+                                <label for="checkout-email " class="form-label">Email address</label>
+                                <input type="text" id="checkout-email" value="${user.getEmail()}" name="checkout-email" class="form-control" required>
                             </div>
                             <div class="d-flex flex-column text-white mt-2">
-                                <label for="checkout-phone" name="checkout-phone" class="form-label" >Phone number</label>
-                                <input type="text" id="checkout-phone" class="form-control" required>
+                                <label for="checkout-phone"  class="form-label" >Phone number</label>
+                                <input type="text" id="checkout-phone" class="form-control"name="checkout-phone" required>
                             </div>
                         </div>
                         <div class="mt-5">
                             <h3 class="text-white text-capitalize">Shipping information</h3>
                             <div class="d-flex flex-column text-white ">
-                                <label for="checkout-name" name="checkout-name" class="form-label ">Your name</label>
-                                <input type="text" id="checkout-name " value="${user.getName()}" class="form-control text-capitalize" required>
+                                <label for="checkout-name"  class="form-label ">Your name</label>
+                                <input type="text" id="checkout-name " value="${user.getName()}" name="checkout-name" class="form-control text-capitalize" required>
                             </div>
 
                             <div class="mt-3 d-flex flex-column  align-items-start"  >
-                                <select name="checkout-city" name="checkout-city" id="cities" class="form-select " required>
+                                <select  name="checkout-city" id="cities" class="form-select " required>
                                     <option value="" selected>Choose the city</option>
                                 </select>
-                                <select name="checkout-district" name="checkout-district" id="districts" class="form-select mt-2 " required>
+                                <select  name="checkout-district" id="districts" class="form-select mt-2 " required>
                                     <option value="" selected>Choose the district</option>
                                 </select>
-                                <select name="checkout-wards" name="checkout-ward" id="wards" class="form-select mt-2" required>
+                                <select  name="checkout-ward" id="wards" class="form-select mt-2" required>
                                     <option value="" selected>Choose the wards</option>
                                 </select>
                             </div>
                             <div class="d-flex flex-column text-white mt-2">
-                                <label for="checkout-address" name="checkout-address" class="form-label">Address</label>
-                                <input type="text" id="checkout-address" class="form-control" required>
+                                <label for="checkout-address"  class="form-label">Address</label>
+                                <input type="text" id="checkout-address" class="form-control" name="checkout-address" required>
                             </div>
                         </div>
                         <div class="mt-5">
@@ -132,9 +132,9 @@
                                     <h5 class="checkout-total"></h5>
                                 </div>
                             </div>
-                                <div class="d-flex">                      
-                                    <input type="submit" class="btn btn-primary text-center mt-5 w-100 text-uppercase" style="padding: 12px; font-size: 20px; letter-spacing: 2px" value="Checkout"/>
-                                </div>
+                        </div>
+                        <div class="d-flex">                      
+                            <input type="submit" class="btn btn-primary text-center mt-5 w-100 text-uppercase" style="padding: 6px; font-size: 20px; letter-spacing: 2px" value="Checkout"/>
                         </div>
                     </div>
                 </form>

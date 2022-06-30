@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Cart;
+import model.History;
 import model.Item;
 import model.User;
 
@@ -132,13 +133,18 @@ public class CheckOutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String checkoutEmail = (String) request.getAttribute("checkout-email");
-        String checkoutPhone = (String) request.getAttribute("checkout-phone");
-        String checkoutName = (String) request.getAttribute("checkout-name");
-        String checkoutCity = (String) request.getAttribute("checkout-city");
-        String checkoutDistrict = (String) request.getAttribute("checkout-district");
-        String checkoutWard = (String) request.getAttribute("checkout-ward");
-        String checkoutAdress = (String) request.getAttribute("checkout-address");
+        String checkoutEmail = (String) request.getParameter("checkout-email");
+        String checkoutPhone = (String) request.getParameter("checkout-phone");
+        String checkoutName = (String) request.getParameter("checkout-name");
+        String checkoutCity = (String) request.getParameter("checkout-city");
+        String checkoutDistrict = (String) request.getParameter("checkout-district");
+        String checkoutWard = (String) request.getParameter("checkout-ward");
+        String checkoutAddress = (String) request.getParameter("checkout-address");
+        String checkoutDelivery = (String) request.getParameter("checkout-delivery");
+        String checkoutMethod = (String) request.getParameter("checkout-method");
+        
+        History history = new History(checkoutEmail, checkoutName, checkoutPhone, checkoutCity, checkoutDistrict, checkoutWard, checkoutAddress, checkoutDelivery, checkoutMethod);
+        System.out.println(history.toString());
     }
 
     public String getDataString(Cart cart){
