@@ -21,64 +21,76 @@
          <jsp:include page="layout/navbar.jsp"/>
         <main>
             <section class="container">
-                <div class="row">
+                <form class="row" action="checkout" method="POST">
                     <div class="col-lg-6">
                         <div>
                             <h3 class="text-white text-capitalize">Contact information</h3>
                             <div class="d-flex flex-column text-white ">
-                                <label for="checkout-email " class="form-label">Email address</label>
-                                <input type="text" id="checkout-email" value="${user.getEmail()}" class="form-control">
+                                <label for="checkout-email " class="form-label" name="checkout-mail">Email address</label>
+                                <input type="text" id="checkout-email" value="${user.getEmail()}" class="form-control" required>
                             </div>
                             <div class="d-flex flex-column text-white mt-2">
-                                <label for="checkout-phone " class="form-label">Phone number</label>
-                                <input type="text" id="checkout-phone" class="form-control">
+                                <label for="checkout-phone" name="checkout-phone" class="form-label" >Phone number</label>
+                                <input type="text" id="checkout-phone" class="form-control" required>
                             </div>
                         </div>
                         <div class="mt-5">
                             <h3 class="text-white text-capitalize">Shipping information</h3>
                             <div class="d-flex flex-column text-white ">
-                                <label for="checkout-name " class="form-label ">Your name</label>
-                                <input type="text" id="checkout-name " value="${user.getName()}" class="form-control text-capitalize">
+                                <label for="checkout-name" name="checkout-name" class="form-label ">Your name</label>
+                                <input type="text" id="checkout-name " value="${user.getName()}" class="form-control text-capitalize" required>
                             </div>
 
                             <div class="mt-3 d-flex flex-column  align-items-start"  >
-                                <select name="checkout-city " id="cities" class="form-select ">
+                                <select name="checkout-city" name="checkout-city" id="cities" class="form-select " required>
                                     <option value="" selected>Choose the city</option>
                                 </select>
-                                <select name="checkout-district " id="districts" class="form-select mt-2 ">
+                                <select name="checkout-district" name="checkout-district" id="districts" class="form-select mt-2 " required>
                                     <option value="" selected>Choose the district</option>
                                 </select>
-                                <select name="checkout-wards" id="wards" class="form-select mt-2">
+                                <select name="checkout-wards" name="checkout-ward" id="wards" class="form-select mt-2" required>
                                     <option value="" selected>Choose the wards</option>
                                 </select>
                             </div>
                             <div class="d-flex flex-column text-white mt-2">
-                                <label for="checkout-address" class="form-label ">Address</label>
-                                <input type="text" id="checkout-address" class="form-control">
+                                <label for="checkout-address" name="checkout-address" class="form-label">Address</label>
+                                <input type="text" id="checkout-address" class="form-control" required>
                             </div>
                         </div>
                         <div class="mt-5">
                             <h3 class="text-white text-capitalize">Delivery method</h3>
                             <div class="d-flex flex-column text-white ">
                                 <div class="form-check">
-                                    <input class="form-check-input checkout-method" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="$5.00">
+                                    <input class="form-check-input checkout-method" type="radio" name="checkout-delivery" id="flexRadioDefault1" data-payment-price="$2.00" value="standard" required>
                                     <label class="form-check-label" for="flexRadioDefault1">
-                                        Standard (4-10 business days) <strong>$5.00</strong>
+                                        Standard (4-10 business days) <strong>$2.00</strong>
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input checkout-method" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="$16.00" checked>
+                                    <input class="form-check-input checkout-method" type="radio" name="checkout-delivery" id="flexRadioDefault2" data-payment-price="$6.00" value="express" checked required>
                                     <label class="form-check-label" for="flexRadioDefault2">
-                                        Express (2-5 business days) <strong>$16.00</strong>
+                                        Express (2-5 business days) <strong>$6.00</strong>
                                     </label>
                                 </div>
                             </div>
                         </div>
                             <div class="mt-5">
                             <h3 class="text-white text-capitalize">Payment method</h3>
-                            <div class="d-flex flex-column text-white ">
+                             <div class="form-check">
+                                    <input class="form-check-input checkout-choose-method" id="cash-method" type="radio" name="checkout-method"  value="cash" required>
+                                    <label class="form-check-label text-white" for="cash-method">
+                                        Payment in cash
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input checkout-choose-method" id="paypal-method" type="radio" name="checkout-method" value="paypal" required checked>
+                                    <label class="form-check-label text-white" for="paypal-method">
+                                        Payment in paypal
+                                    </label>
+                                </div>
+<!--                            <div class="d-flex flex-column text-white ">
                                 <div id="paypal" class="w-75"></div>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -120,12 +132,12 @@
                                     <h5 class="checkout-total"></h5>
                                 </div>
                             </div>
-                                <div>
-                                    <a href="url" class="btn btn-primary">CHECKOUT</a>
+                                <div class="d-flex">                      
+                                    <input type="submit" class="btn btn-primary text-center mt-5 w-100 text-uppercase" style="padding: 12px; font-size: 20px; letter-spacing: 2px" value="Checkout"/>
                                 </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </section>
 
         </main>

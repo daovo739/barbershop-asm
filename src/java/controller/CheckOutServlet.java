@@ -132,7 +132,13 @@ public class CheckOutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String checkoutEmail = (String) request.getAttribute("checkout-email");
+        String checkoutPhone = (String) request.getAttribute("checkout-phone");
+        String checkoutName = (String) request.getAttribute("checkout-name");
+        String checkoutCity = (String) request.getAttribute("checkout-city");
+        String checkoutDistrict = (String) request.getAttribute("checkout-district");
+        String checkoutWard = (String) request.getAttribute("checkout-ward");
+        String checkoutAdress = (String) request.getAttribute("checkout-address");
     }
 
     public String getDataString(Cart cart){

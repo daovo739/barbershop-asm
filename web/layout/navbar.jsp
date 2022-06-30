@@ -62,7 +62,7 @@
                                     <a class="nav-link text-white fs-4"  href="#">${cookie.userName.value} </a>
                                 </div>
                                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="#">View your cart</a></li>
+                                    <li><a class="dropdown-item" href="checkout">View your cart</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="btn btn-danger nav-link d-flex text-white " href="logout" ><span class="material-symbols-outlined">

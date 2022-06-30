@@ -2,7 +2,7 @@ const cityEle = document.querySelector("#cities");
 const districtEle = document.querySelector("#districts");
 const wardEle = document.querySelector("#wards");
 const checkoutMethod = document.querySelectorAll(".checkout-method");
-
+const checkoutMethodChoose = document.querySelectorAll(".checkout-choose-method");
 
 let data;
 let city;
@@ -103,7 +103,7 @@ const updatePrice = () => {
     const checkoutCartTotal = document.querySelector(".checkout-cart-total");
     checkoutMethod.forEach((item) => {
         if (item.checked) {
-            itemRadio = item.value;
+            itemRadio = item.getAttribute("data-payment-price");
         }
     });
     checkoutFeeShipping.textContent = `${itemRadio}`;
@@ -117,29 +117,33 @@ checkoutMethod.forEach((item) => {
         updatePrice();
     });
 });
+//
+//paypal.Buttons({
+//    // Sets up the transaction when a payment button is clicked
+//    createOrder: (data, actions) => {
+//        return actions.order.create({
+//            purchase_units: [{
+//                    amount: {
+//                        value: totalCost // Can also reference a variable or function
+//                    }
+//                }]
+//        });
+//    },
+//    // Finalize the transaction after payer approval
+//    onApprove: (data, actions) => {
+//        return actions.order.capture().then(function (orderData) {
+//            // Successful capture! For dev/demo purposes:
+//            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+//            const transaction = orderData.purchase_units[0].payments.captures[0];
+//            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+//            // When ready to go live, remove the alert and show a success message within this page. For example:
+//            // const element = document.getElementById('paypal-button-container');
+//            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+//            // Or go to another URL:  actions.redirect('thank_you.html');
+//        });
+//    }
+//}).render('#paypal');
 
-paypal.Buttons({
-    // Sets up the transaction when a payment button is clicked
-    createOrder: (data, actions) => {
-        return actions.order.create({
-            purchase_units: [{
-                    amount: {
-                        value: totalCost // Can also reference a variable or function
-                    }
-                }]
-        });
-    },
-    // Finalize the transaction after payer approval
-    onApprove: (data, actions) => {
-        return actions.order.capture().then(function (orderData) {
-            // Successful capture! For dev/demo purposes:
-            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-            const transaction = orderData.purchase_units[0].payments.captures[0];
-            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
-            // When ready to go live, remove the alert and show a success message within this page. For example:
-            // const element = document.getElementById('paypal-button-container');
-            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-            // Or go to another URL:  actions.redirect('thank_you.html');
-        });
-    }
-}).render('#paypal');
+//checkoutMethodChoose.forEach((item) => {
+//    
+//});
