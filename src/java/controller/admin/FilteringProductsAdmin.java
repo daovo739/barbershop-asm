@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.Product;
 
 /**
@@ -73,15 +74,19 @@ public class FilteringProductsAdmin extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+  
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
-        ArrayList<Product> products = null;
+
         try {
+            PrintWriter out = response.getWriter();
+            ArrayList<Product> products = null;
             ProductsDAO db = new ProductsDAO();
             String search = request.getParameter("search");
-            products = db.getProductsSearching(search);        
+            products = db.getProductsSearching(search);
             if (products != null) {
                 String data = getDataString(products);
                 out.println(data);
@@ -90,6 +95,7 @@ public class FilteringProductsAdmin extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(GetProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**

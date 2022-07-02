@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="./static/css/login-register.css" rel="stylesheet" type="text/css"/>
         <title>Register User</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -26,24 +26,29 @@
                         app_registration
                     </span></div>
                 <h2 class="text-white">Register</h2>
-                <form action="register" method="POST" class="box box-register">
+                <form action="register" method="POST" class="box box-register" enctype='multipart/form-data'>
                     <input type="text" name="name" class="name"
-                           id="name" placeholder="Enter your name" />
+                           id="name" placeholder="Enter your name" required/>
 
-                    <input type="email" name="email" id="email"
-                           placeholder="Enter email"/>
+                    <input class="mt-2" type="email" name="email" id="email"
+                           placeholder="Enter email" required/>
 
-                    <input type="text" name="userName" id="userName"
-                           placeholder="Enter user name"/>
+                    <input class="mt-2"  type="text" name="userName" id="userName"
+                           placeholder="Enter user name" required/>
 
-                    <input type="password" name="password" id="password"
-                           placeholder="Enter password" />
+                    <input class="mt-2" type="password" name="password" id="password"
+                           placeholder="Enter password" required/>
 
-                    <input type="password" name="confirmPassword"
-                           id="confirmPassword" placeholder="Enter password again" />
+                    <input class="mt-2" type="password" name="confirmPassword"
+                           id="confirmPassword" placeholder="Enter password again" required/>
 
-                    <div class="register-login">
-                        <button type="submit" name="register">Register</button> 
+                    <div class="d-flex flex-column text-white mt-2" style="padding: 0">
+                        <label for="formFile" class="form-label">Avatar Image (Not required)</label>
+                       <input class="form-control" type="file" id="formFile" name="avatar">
+                    </div>
+
+                    <div class="register-login mt-3 d-flex " style="padding: 0">
+                        <button type="submit" name="register" class="w-100"  style="font-size: 20px">Register</button>
                     </div>
                 </form>
                 <c:if test="${not empty msg}">

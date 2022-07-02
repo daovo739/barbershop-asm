@@ -5,6 +5,7 @@
 package controller;
 
 import DAO.CartDAO;
+import DAO.HistoryDAO;
 import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -133,18 +134,34 @@ public class CheckOutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String checkoutEmail = (String) request.getParameter("checkout-email");
-        String checkoutPhone = (String) request.getParameter("checkout-phone");
-        String checkoutName = (String) request.getParameter("checkout-name");
-        String checkoutCity = (String) request.getParameter("checkout-city");
-        String checkoutDistrict = (String) request.getParameter("checkout-district");
-        String checkoutWard = (String) request.getParameter("checkout-ward");
-        String checkoutAddress = (String) request.getParameter("checkout-address");
-        String checkoutDelivery = (String) request.getParameter("checkout-delivery");
-        String checkoutMethod = (String) request.getParameter("checkout-method");
-        
-        History history = new History(checkoutEmail, checkoutName, checkoutPhone, checkoutCity, checkoutDistrict, checkoutWard, checkoutAddress, checkoutDelivery, checkoutMethod);
-        System.out.println(history.toString());
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        try {
+            String checkoutEmail = (String) request.getParameter("checkout-email");
+            String checkoutPhone = (String) request.getParameter("checkout-phone");
+            String checkoutName = (String) request.getParameter("checkout-name");
+            String checkoutCity = (String) request.getParameter("checkout-city");
+            String checkoutDistrict = (String) request.getParameter("checkout-district");
+            String checkoutWard = (String) request.getParameter("checkout-ward");
+            String checkoutAddress = (String) request.getParameter("checkout-address");
+            String checkoutDelivery = (String) request.getParameter("checkout-delivery");
+            String checkoutMethod = (String) request.getParameter("checkout-method");
+            int userId = getUserId(request, response);
+            CartDAO cartDAO = new CartDAO();
+            Cart cart = cartDAO.getCart(userId);
+            double feeShipping = checkoutDelivery.equalsIgnoreCase("express") ? 6 : 2;
+            double totalCostHistory = cart.getTotalCostCart();
+            totalCostHistory +=feeShipping;
+            History history = new History(userId,checkoutEmail, checkoutPhone,checkoutName, checkoutCity, checkoutDistrict, checkoutWard, checkoutAddress, checkoutDelivery, checkoutMethod,  totalCostHistory);
+            for (Item item : cart.getCart()) {
+                history.getProductIdList().put(item.getProduct(), item.getQuantity());
+            }
+            request.getSession().setAttribute("historyConfirm", history);
+            request.getSession().setAttribute("cartConfirm", cart);
+            request.getRequestDispatcher("confirmCheckout.jsp").include(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckOutServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public String getDataString(Cart cart){
@@ -167,7 +184,7 @@ public class CheckOutServlet extends HttpServlet {
 "                                        <p class=\"text-white\">$"+item.getTotalCost()+"</p>\n" +
 "                                    </div>\n" +
 "                                </div>\n" +
-"                                    <hr style=\"color: #fff\" class=\"mt-5\">";
+"                                    <hr style=\"color: #fff\" class=\"mt-3\">";
         }
         data += "</div><div class=\"d-flex flex-column text-white mt-5\">\n" +
 "                                <div class=\"d-flex justify-content-between\">\n" +
@@ -185,6 +202,7 @@ public class CheckOutServlet extends HttpServlet {
 "                            </div>";
         return data;
     }
+    
     public int getUserId(HttpServletRequest req, HttpServletResponse res){
         int userId = -1;
             Cookie[] cookies = req.getCookies();

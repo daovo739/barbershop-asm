@@ -5,6 +5,7 @@ package controller;
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 import DAO.CartDAO;
+import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.User;
 
 /**
  *
@@ -36,6 +38,7 @@ public class LoadDataServlet extends HttpServlet {
         try {
             int userId = 0;
             CartDAO cartDAO = new CartDAO();
+            UserDAO userDAO = new UserDAO();
             Cookie[] cookies = request.getCookies();
             boolean isHaveCooky = false;
             if (cookies != null) {
@@ -50,7 +53,9 @@ public class LoadDataServlet extends HttpServlet {
 
             if (isHaveCooky) {
                 int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userId));
+                User user = userDAO.getUserById(userId);
                 request.getSession().setAttribute("cartCount", countProduct);
+                request.getSession().setAttribute("userCurrent", user);
             }
             request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
         } catch (SQLException ex) {

@@ -14,14 +14,22 @@
         <link type="text/css" rel="stylesheet" href="./static/css/style.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <script src="https://www.paypal.com/sdk/js?client-id=AdznrYMJFJhdO3BsR0iQBUHNVyl5hZlQJqJ5UHA_xW9f9rlj2dEt4S9AFiKqvA_nZuAeJ5jdHMikrO25"></script>
+  
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
          <jsp:include page="layout/navbar.jsp"/>
         <main>
             <section class="container">
-                <form class="row" action="checkout" method="POST">
+                <c:if test="${cart.getCart().isEmpty()}">
+                    <div style="height: 70vh" class="d-flex flex-column text-white justify-content-center align-items-center">
+                        <h1>Your cart is empty!</h1>
+                    <a href="products" class="text-decoration-none btn btn-primary">Shopping Now</a>
+                    </div>
+                    
+                </c:if>
+                    <c:if test="${not cart.getCart().isEmpty()}">
+                    <form class="row" action="checkout" method="POST">
                     <div class="col-lg-6">
                         <div>
                             <h3 class="text-white text-capitalize">Contact information</h3>
@@ -77,13 +85,13 @@
                             <div class="mt-5">
                             <h3 class="text-white text-capitalize">Payment method</h3>
                              <div class="form-check">
-                                    <input class="form-check-input checkout-choose-method" id="cash-method" type="radio" name="checkout-method"  value="cash" required>
+                                    <input class="form-check-input checkout-choose-method" id="cash-method" type="radio" name="checkout-method"  value="cash" required checked>
                                     <label class="form-check-label text-white" for="cash-method">
                                         Payment in cash
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input checkout-choose-method" id="paypal-method" type="radio" name="checkout-method" value="paypal" required checked>
+                                    <input class="form-check-input checkout-choose-method" id="paypal-method" type="radio" name="checkout-method" value="paypal" required >
                                     <label class="form-check-label text-white" for="paypal-method">
                                         Payment in paypal
                                     </label>
@@ -115,7 +123,7 @@
                                             <p class="text-white">$${item.getTotalCost()}</p>
                                         </div>
                                     </div>
-                                    <hr style="color: #fff" class="mt-5">
+                                    <hr style="color: #fff" class="mt-3">
                                 </c:forEach>
                             </div>
                             <div class="d-flex flex-column text-white mt-5">
@@ -138,6 +146,8 @@
                         </div>
                     </div>
                 </form>
+                </c:if>
+                
             </section>
 
         </main>

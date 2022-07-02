@@ -131,6 +131,20 @@ public class CartDAO {
         return false;
     }
     
+    public boolean deleteCart(int cartId){
+        try {
+            String sql;
+            sql = "delete FROM  cart_contains where cart_id = " + cartId;
+            stm.executeUpdate(sql);
+            sql = "delete FROM  cart where cart_id = " + cartId;
+            stm.executeUpdate(sql);
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
     public String getDataString(Cart cart) {
         String data;
         if (cart.getCart().isEmpty()) {
@@ -171,7 +185,7 @@ public class CartDAO {
                     + "            <p class=\"fs-3 text\">Total</p>\n"
                     + "            <p class=\"fs-3 text fw-bold\">$" + cart.getTotalCostCart() + "</p>\n"
                     + "        </div>\n"
-                    + "        <button class=\"btn btn-primary\"><a  class=\"text-white text-decoration-none\" href=\"checkout\">Checkout</a></button>\n"
+                    + "        <a  class=\"btn btn-primary text-white text-decoration-none d-flex justify-content-center\" style=\"font-size: 18px\" href=\"checkout\">Checkout</a>\n"
                     + "    </div>";
         }
         return data;

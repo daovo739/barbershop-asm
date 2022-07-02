@@ -58,11 +58,13 @@
                         <div class="d-flex align-items-center justify-content-center">
                             <div class="nav-item dropdown">
                                 <div class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class="material-symbols-outlined" style="color: green; font-size: 30px">account_circle</span>
+                                    <!--<span class="material-symbols-outlined" style="color: green; font-size: 30px">account_circle</span>-->
+                                    <img src="${userCurrent.getAvatar()}" alt="avatar-${userCurrent.getId()}" style="width: 50px; height: 50px; vertical-align: middle; border-radius: 50%"/>
                                     <a class="nav-link text-white fs-4"  href="#">${cookie.userName.value} </a>
                                 </div>
                                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="checkout">View your cart</a></li>
+                                    <li><a class="dropdown-item text-capitalize" href="checkout">View your cart</a></li>
+                                    <li><a class="dropdown-item text-capitalize" href="history">order history</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="btn btn-danger nav-link d-flex text-white " href="logout" ><span class="material-symbols-outlined">

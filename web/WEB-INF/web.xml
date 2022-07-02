@@ -52,6 +52,14 @@
         <servlet-name>BookingServlet</servlet-name>
         <servlet-class>controller.admin.BookingAdminServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ConfirmCheckoutServlet</servlet-name>
+        <servlet-class>controller.ConfirmCheckoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HistoryServlet</servlet-name>
+        <servlet-class>controller.HistoryServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GetProductsHomeServlet</servlet-name>
         <url-pattern>/GetProductsHomeServlet</url-pattern>
@@ -103,6 +111,14 @@
     <servlet-mapping>
         <servlet-name>BookingServlet</servlet-name>
         <url-pattern>/bookingAdmin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmCheckoutServlet</servlet-name>
+        <url-pattern>/confirm-checkout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HistoryServlet</servlet-name>
+        <url-pattern>/history</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

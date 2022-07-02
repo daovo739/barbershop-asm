@@ -63,6 +63,7 @@ public class LogoutServlet extends HttpServlet {
                 response.addCookie(cookie);
             }
         }
+        request.getSession().removeAttribute("userCurrent");
         request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
     }
 

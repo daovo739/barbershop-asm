@@ -29,7 +29,7 @@ public class UserDAO {
           if (user.getUserName().equalsIgnoreCase("admin")){
             return false;
         }
-        String sql = "INSERT INTO users (name, email,userName, password) VALUES (?, ?,?,?);";
+        String sql = "INSERT INTO users (name, email,userName, password, avatar) VALUES (?, ?,?,?,?);";
 
         try {
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -37,41 +37,39 @@ public class UserDAO {
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getUserName());
             statement.setString(4, user.getPassword());
-            statement.executeUpdate();
+            statement.setString(5, user.getAvatar());
+            statement.execute();
             return true;
         } catch (SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
             return false;
         }
     }
     
-    public boolean checkLogin(User user) {
+    public User checkLogin(User user) {
         try {
+                        User userReturn = null;
             String sql = "Select * from users where userName = ? and password = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getPassword());
             ResultSet rs = statement.executeQuery();
-            return rs.next();
+            while(rs.next()){
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                String email = rs.getString(3);
+                String userName = rs.getString(4);
+                String password = rs.getString(5);
+                String avatar = rs.getString(6);
+              userReturn = new User(id,name, email, userName, password, avatar);
+            }
+            return userReturn;
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-             return false;
+            return null;
         }
     }
-    
-    public int getUserIdByUsername(String userName) {
-        try {
-            String sql = "Select user_id from users where userName = ? ";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, userName);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            return rs.getInt(1);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-             return -1;
-        }
-    }
-    
+
      public User getUserById(int id) {
         try {
             String sql = "Select * from users where user_id = ? ";
@@ -82,7 +80,8 @@ public class UserDAO {
             while (rs.next()) {                
                 String name = rs.getString(2);
                 String email = rs.getString(3);
-                user = new User(id,name, email);
+                String avatar = rs.getString(6);
+                user = new User(id,name, email, avatar);
             }
             return user;
         } catch (SQLException ex) {

@@ -3,15 +3,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-
+import DAO.ProductsDAO;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 /**
  *
  * @author Admin
  */
 public class History {
-    private String email, phone, name, city, district, ward, address, deliveryMethod, paymentMethod;
 
-    public History(String email, String phone, String name, String city, String district, String ward, String address, String deliveryMethod, String paymentMethod) {
+    private int historyId, userId, productId,  quantity;
+    private HashMap<Product, Integer> productIdList;
+    private String email, phone, name, city, district, ward, address, deliveryMethod, paymentMethod;
+    private double totalCostHistory;
+    private String createAt;
+    
+    public History(int userId, String email, String phone, String name, String city, String district, String ward, String address, String deliveryMethod, String paymentMethod, double totalCostHistory) {
+       this.userId = userId;
         this.email = email;
         this.phone = phone;
         this.name = name;
@@ -21,6 +32,69 @@ public class History {
         this.address = address;
         this.deliveryMethod = deliveryMethod;
         this.paymentMethod = paymentMethod;
+        this.totalCostHistory = totalCostHistory;
+        this.productIdList = new HashMap<>();
+        setCreateAt();
+    }
+
+    public History(int historyId, int userId,  Timestamp date, String email, String phone, String name, String city, String district, String ward, String address, String deliveryMethod, String paymentMethod, double totalCostHistory) throws SQLException {
+        ProductsDAO productsDAO = new ProductsDAO();
+        this.historyId = historyId;
+        this.userId = userId;
+        this.email = email;
+        this.phone = phone;
+        this.name = name;
+        this.city = city;
+        this.district = district;
+        this.ward = ward;
+        this.address = address;
+        this.deliveryMethod = deliveryMethod;
+        this.paymentMethod = paymentMethod;
+        this.totalCostHistory = totalCostHistory;
+        this.productIdList = new HashMap<>();
+        setCreateAtTimestamp(date);
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    
+    public HashMap<Product, Integer> getProductIdList() {
+        return productIdList;
+    }
+
+    public void setProductIdList(HashMap<Product, Integer> productIdList) {
+        this.productIdList = productIdList;
+    }
+
+    
+    public int getHistoryId() {
+        return historyId;
+    }
+
+    public void setHistoryId(int historyId) {
+        this.historyId = historyId;
+    }
+
+    public double getTotalCostHistory() {
+        return totalCostHistory;
+    }
+
+    public void setTotalCostHistory(double totalCostHistory) {
+        this.totalCostHistory = totalCostHistory;
     }
 
     public String getEmail() {
@@ -95,10 +169,38 @@ public class History {
         this.paymentMethod = paymentMethod;
     }
 
+    public String getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt() {
+       
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = formatter.format(new Date());
+        this.createAt = date;
+
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setCreateAtTimestamp(Timestamp date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String newBookingDate = formatter.format(date);
+        this.createAt = newBookingDate;
+    }
     @Override
     public String toString() {
-        return "History{" + "email=" + email + ", phone=" + phone + ", name=" + name + ", city=" + city + ", district=" + district + ", ward=" + ward + ", address=" + address + ", deliveryMethod=" + deliveryMethod + ", paymentMethod=" + paymentMethod + '}';
+        return "History{" + "historyId=" + historyId + ", userId=" + userId + ", productIdList=" + productIdList + ", email=" + email + ", phone=" + phone + ", name=" + name + ", city=" + city + ", district=" + district + ", ward=" + ward + ", address=" + address + ", deliveryMethod=" + deliveryMethod + ", paymentMethod=" + paymentMethod + ", totalCostHistory=" + totalCostHistory + ", createAt=" + createAt + '}';
     }
+
     
     
+   
+
 }

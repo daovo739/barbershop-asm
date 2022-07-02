@@ -25,9 +25,9 @@ import model.Product;
  * @author HHPC
  */
 @MultipartConfig(
-  fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
-  maxFileSize = 1024 * 1024 * 10,      // 10 MB
-  maxRequestSize = 1024 * 1024 * 100   // 100 MB
+        fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
+        maxFileSize = 1024 * 1024 * 10, // 10 MB
+        maxRequestSize = 1024 * 1024 * 100 // 100 MB
 )
 public class ProductsServlet extends HttpServlet {
 
@@ -48,7 +48,7 @@ public class ProductsServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProductsServlet</title>");            
+            out.println("<title>Servlet ProductsServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ProductsServlet at " + request.getContextPath() + "</h1>");
@@ -63,60 +63,80 @@ public class ProductsServlet extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
+     * @return
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    public boolean checkRole(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("role_admin") == null || !session.getAttribute("role_admin").equals("admin")) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            ProductsDAO productsDAO = new ProductsDAO();
-            ArrayList<Product> products = productsDAO.getAllProducts();
-            if (products == null) {
-                request.setAttribute("msg", "Product List Is Empty");
-                request.getRequestDispatcher("productsAdmin.jsp").forward(request, response);
-            } else {
-                session.setAttribute("productsAdmin", products);
-                response.sendRedirect("productsAdmin.jsp");
+        if (!checkRole(request, response)) {
+            response.sendRedirect("GetProductsHomeServlet");
+        } else {
+            try {
+                HttpSession session = request.getSession();
+
+                ProductsDAO productsDAO = new ProductsDAO();
+                ArrayList<Product> products = productsDAO.getAllProducts();
+                if (products == null) {
+                    request.setAttribute("msg", "Product List Is Empty");
+                    request.getRequestDispatcher("productsAdmin.jsp").forward(request, response);
+                } else {
+                    session.setAttribute("productsAdmin", products);
+                    response.sendRedirect("productsAdmin.jsp");
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            PrintWriter out = resp.getWriter();
-            ProductsDAO productsDAO= new ProductsDAO();
-            String name = req.getParameter("name");
-            String brand = req.getParameter("brand");
-            String category = req.getParameter("category");
-            double price = Double.parseDouble(req.getParameter("price"));
-            Part filePart = req.getPart("file");
-            String fileName = filePart.getSubmittedFileName();
-            String realPath = req.getServletContext().getRealPath("/static/images/products");
-            System.out.println(realPath + "\\" + fileName);
-            String imgLink = "./static/images/products/"+fileName;
-            
-            Product product = new Product( name, brand, imgLink, "T", category, price);
-            if(productsDAO.createProduct(product)){
-                ArrayList<Product> products = productsDAO.getAllProducts();
-                String data = getDataString(products);         
-                filePart.write(realPath + "\\" + fileName);
-                out.println(data);
-            }else{
-                resp.setStatus(500);
-                out.flush();
-            }       
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
+        if (!checkRole(req, resp)) {
+            resp.sendRedirect("GetProductsHomeServlet");
+        } else {
+            try {
+
+                PrintWriter out = resp.getWriter();
+                ProductsDAO productsDAO = new ProductsDAO();
+                String name = req.getParameter("name");
+                String brand = req.getParameter("brand");
+                String category = req.getParameter("category");
+                double price = Double.parseDouble(req.getParameter("price"));
+                Part filePart = req.getPart("file");
+                String fileName = filePart.getSubmittedFileName();
+                String realPath = req.getServletContext().getRealPath("/static/images/products");
+                String imgLink = "./static/images/products/" + fileName;
+
+                Product product = new Product(name, brand, imgLink, "T", category, price);
+                if (productsDAO.createProduct(product)) {
+                    ArrayList<Product> products = productsDAO.getAllProducts();
+                    String data = getDataString(products);
+                    filePart.write(realPath + "\\" + fileName);
+                    out.println(data);
+                } else {
+                    resp.setStatus(500);
+                    out.flush();
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }
-    
-    
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -128,42 +148,47 @@ public class ProductsServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
-        try {
-            int id = Integer.parseInt(request.getParameter("id"));
-            ProductsDAO productsDAO = new ProductsDAO();
-            Product product = productsDAO.getProductById(id);
-            if (!request.getParameter("name").isEmpty()){
-                product.setName(request.getParameter("name"));
+        if (!checkRole(request, response)) {
+            response.sendRedirect("GetProductsHomeServlet");
+        } else {
+            try {
+                PrintWriter out = response.getWriter();
+                int id = Integer.parseInt(request.getParameter("id"));
+                ProductsDAO productsDAO = new ProductsDAO();
+                Product product = productsDAO.getProductById(id);
+                if (!request.getParameter("name").isEmpty()) {
+                    product.setName(request.getParameter("name"));
+                }
+                if (!request.getParameter("brand").isEmpty()) {
+                    product.setBrand(request.getParameter("brand"));
+                }
+                if (!request.getParameter("category").isEmpty()) {
+                    product.setCategory(request.getParameter("category"));
+                }
+                if (!request.getParameter("price").isEmpty()) {
+                    product.setPrice(Double.parseDouble(request.getParameter("price")));
+                }
+                Part filePart = request.getPart("file");
+                String fileName = filePart.getSubmittedFileName();
+                String realPath = request.getServletContext().getRealPath("/static/images/products");
+                filePart.write(realPath + "/" + fileName);
+                if (fileName != null) {
+                    product.setImgLink("./static/images/products/" + fileName);
+                }
+
+                if (productsDAO.updateProduct(product)) {
+                    ArrayList<Product> products = productsDAO.getAllProducts();
+                    String data = getDataString(products);
+                    out.println(data);
+                } else {
+                    response.setStatus(500);
+                    out.flush();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (!request.getParameter("brand").isEmpty()){
-                product.setBrand(request.getParameter("brand"));
-            }
-              if (!request.getParameter("category").isEmpty()){
-                product.setCategory(request.getParameter("category"));
-            }
-            if (!request.getParameter("price").isEmpty()){
-                product.setPrice(Double.parseDouble(request.getParameter("price")));
-            }
-            Part filePart = request.getPart("file");
-            String fileName = filePart.getSubmittedFileName();
-            String realPath = request.getServletContext().getRealPath("/static/images/products");
-            filePart.write(realPath+"/"+fileName);
-            if (fileName != null){
-                product.setImgLink("./static/images/products/"+fileName);
-            }
-          
-             if(productsDAO.updateProduct(product)){
-                ArrayList<Product> products = productsDAO.getAllProducts();
-                String data = getDataString(products);            
-                out.println(data);
-            }else{
-                response.setStatus(500);
-                out.flush();
-            }    
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**
@@ -172,25 +197,28 @@ public class ProductsServlet extends HttpServlet {
      * @param products
      * @return a String containing servlet description
      */
-    
-    
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
-        try {
-            int id = Integer.parseInt(req.getParameter("id"));
-            ProductsDAO productsDAO = new ProductsDAO();
-            if (productsDAO.deleteProduct(id)) {
-                ArrayList<Product> products = productsDAO.getAllProducts();
-                String data = getDataString(products);
-                out.println(data);
-            } else {
-                resp.setStatus(500);
-                out.flush();
+        if (!checkRole(req, resp)) {
+            resp.sendRedirect("GetProductsHomeServlet");
+        } else {
+            try {
+                PrintWriter out = resp.getWriter();
+                int id = Integer.parseInt(req.getParameter("id"));
+                ProductsDAO productsDAO = new ProductsDAO();
+                if (productsDAO.deleteProduct(id)) {
+                    ArrayList<Product> products = productsDAO.getAllProducts();
+                    String data = getDataString(products);
+                    out.println(data);
+                } else {
+                    resp.setStatus(500);
+                    out.flush();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     public String getDataString(ArrayList<Product> products) {
@@ -207,52 +235,51 @@ public class ProductsServlet extends HttpServlet {
                     + "                                </div>\n"
                     + "                                <h5 class=\"text-capitalize\"  style=\"font-size: 26px\">$" + product.getPrice() + "</h5>\n"
                     + "                                 <div class=\"d-flex flex-column justify-content-between\">\n"
-                    + "                                    <button class=\"btn btn-primary mb-2\" style=\"padding: 12px; font-size: 16px\" data-bs-toggle=\"modal\" href=\"#exampleModalToggle"+product.getId()+"\">Update</button>\n"
-                    + "                                    <button class=\"btn btn-danger \" style=\"padding: 12px; font-size: 16px\" data-bs-toggle=\"modal\" href=\"#exampleModalToggleDelete"+product.getId()+"\">Delete</button>\n" +
-                        "                                </div>"
+                    + "                                    <button class=\"btn btn-primary mb-2\" style=\"padding: 12px; font-size: 16px\" data-bs-toggle=\"modal\" href=\"#exampleModalToggle" + product.getId() + "\">Update</button>\n"
+                    + "                                    <button class=\"btn btn-danger \" style=\"padding: 12px; font-size: 16px\" data-bs-toggle=\"modal\" href=\"#exampleModalToggleDelete" + product.getId() + "\">Delete</button>\n"
+                    + "                                </div>"
                     + "                            </div>\n"
                     + "\n"
                     + "                            <div class=\"modal fade \" id=\"exampleModalToggle" + product.getId() + "\" tabindex=\"-1\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\n"
                     + "                                <div class=\"modal-dialog modal-dialog-centered \">\n"
                     + "                                    <div class=\"modal-content \">\n"
                     + "                                        <div class=\"modal-header\">\n"
-                    + "                                            <h5 class=\"modal-title\" id=\"exampleModalLabel\">Update product <strong>#"+product.getId()+"</strong></h5>\n"
+                    + "                                            <h5 class=\"modal-title\" id=\"exampleModalLabel\">Update product <strong>#" + product.getId() + "</strong></h5>\n"
                     + "                                            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n"
                     + "                                        </div>\n"
-                    + "                                        <form class=\"modal-body\" id=\"form-product-"+product.getId()+"\" enctype=\"multipart/form-data\">\n"
+                    + "                                        <form class=\"modal-body\" id=\"form-product-" + product.getId() + "\" enctype=\"multipart/form-data\">\n"
                     + "                              \n"
-                    + "                                            <input type=\"text\" id=\"name-"+product.getId()+"\" name=\"name\" placeholder=\"Enter name\" class=\"form-control mb-2\">\n"
-                    + "                                            <input type=\"text\" id=\"brand-"+product.getId()+"\" name=\"brand\" placeholder=\"Enter brand\" class=\"form-control mb-2\">\n"
-                    + "                                             <input type=\"text\" id=\"category-"+product.getId()+"\" name=\"category\" placeholder=\"Enter category\" class=\"form-control mb-2\">\n"
-                    + "                                            <input type=\"text\" id=\"price-"+product.getId()+"\" name=\"price\" placeholder=\"Enter price\" class=\"form-control mb-2\">\n"
+                    + "                                            <input type=\"text\" id=\"name-" + product.getId() + "\" name=\"name\" placeholder=\"Enter name\" class=\"form-control mb-2\">\n"
+                    + "                                            <input type=\"text\" id=\"brand-" + product.getId() + "\" name=\"brand\" placeholder=\"Enter brand\" class=\"form-control mb-2\">\n"
+                    + "                                             <input type=\"text\" id=\"category-" + product.getId() + "\" name=\"category\" placeholder=\"Enter category\" class=\"form-control mb-2\">\n"
+                    + "                                            <input type=\"text\" id=\"price-" + product.getId() + "\" name=\"price\" placeholder=\"Enter price\" class=\"form-control mb-2\">\n"
                     + "                                            <div class=\"input-group mb-2\">\n"
                     + "                                                <label class=\"input-group-text\" for=\"inputGroupFile01\">Upload</label>\n"
-                    + "                                                <input type=\"file\" id=\"ajaxfile-"+product.getId()+"\" class=\"form-control\">\n"
+                    + "                                                <input type=\"file\" id=\"ajaxfile-" + product.getId() + "\" class=\"form-control\">\n"
                     + "                                            </div>\n"
                     + "\n"
                     + "                                        </form>\n"
                     + "                                        <div class=\"modal-footer\">\n"
                     + "                                            <button type=\"button\" class=\"btn btn-secondary close-modal\" data-bs-dismiss=\"modal\">Close</button>\n"
-                    + "                                            <button data-id=\""+product.getId()+"\" type=\"button\" class=\"btn btn-primary\" onclick=\"updateProduct(this)\">Update</button>\n"
+                    + "                                            <button data-id=\"" + product.getId() + "\" type=\"button\" class=\"btn btn-primary\" onclick=\"updateProduct(this)\">Update</button>\n"
                     + "                                        </div>\n"
                     + "                                    </div>\n"
                     + "                                </div>\n"
-                    +
-                    "                            </div>"
-                    + "<div class=\"modal fade \" id=\"exampleModalToggleDelete"+product.getId()+"\" tabindex=\"-1\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\n" +
-"                                    <div class=\"modal-dialog modal-dialog-centered \">\n" +
-"                                        <div class=\"modal-content \">\n" +
-"                                            <div class=\"modal-header\">\n" +
-"                                                <h5 class=\"modal-title\" id=\"exampleModalLabel\">Delete product <strong>#"+product.getId()+"</strong></h5>\n" +
-"                                                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n" +
-"                                            </div>\n"
+                    + "                            </div>"
+                    + "<div class=\"modal fade \" id=\"exampleModalToggleDelete" + product.getId() + "\" tabindex=\"-1\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\n"
+                    + "                                    <div class=\"modal-dialog modal-dialog-centered \">\n"
+                    + "                                        <div class=\"modal-content \">\n"
+                    + "                                            <div class=\"modal-header\">\n"
+                    + "                                                <h5 class=\"modal-title\" id=\"exampleModalLabel\">Delete product <strong>#" + product.getId() + "</strong></h5>\n"
+                    + "                                                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n"
+                    + "                                            </div>\n"
                     + "                                            <div class=\"modal-body\" enctype=\"multipart/form-data\">\n"
-                    + "                                                <h5>Do you want to delete product <strong>"+product.getName()+"</strong>?</h5>\n"
+                    + "                                                <h5>Do you want to delete product <strong>" + product.getName() + "</strong>?</h5>\n"
                     + "\n"
                     + "                                            </div>\n"
                     + "                                            <div class=\"modal-footer\">\n"
                     + "                                                <button type=\"button\" class=\"btn btn-secondary close-modal\" data-bs-dismiss=\"modal\">Close</button>\n"
-                    + "                                                <button data-id=\""+product.getId()+"\" type=\"button\" class=\"btn btn-primary\" onclick=\"deleteProduct(this)\">Delete</button>\n"
+                    + "                                                <button data-id=\"" + product.getId() + "\" type=\"button\" class=\"btn btn-primary\" onclick=\"deleteProduct(this)\">Delete</button>\n"
                     + "                                            </div>\n"
                     + "                                        </div>\n"
                     + "                                    </div>\n"
@@ -260,6 +287,7 @@ public class ProductsServlet extends HttpServlet {
         }
         return data;
     }
+
     @Override
     public String getServletInfo() {
         return "Short description";

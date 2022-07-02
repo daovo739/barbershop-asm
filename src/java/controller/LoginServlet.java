@@ -83,19 +83,21 @@ public class LoginServlet extends HttpServlet {
             String userName = request.getParameter("userName");
             String password = request.getParameter("password");
             if (userName.equals("admin") && password.equals("admin")) {
+                request.getSession().setAttribute("role_admin", "true");
                 response.sendRedirect("productsAdmin");
             } else {
                 User user = new User(userName, password);
-                if (userDAO.checkLogin(user)) {
-                    Cookie userCookie = new Cookie("userName", userName);
+                User userLogin = userDAO.checkLogin(user);
+                if (userLogin != null) {
+                    Cookie userCookie = new Cookie("userName", userLogin.getUserName());
                     userCookie.setMaxAge(60 * 60 * 24 * 30);
                     response.addCookie(userCookie);
-                    int userId = userDAO.getUserIdByUsername(userName);
-                    Cookie idCookie = new Cookie("userId", Integer.toString(userId));
+                    Cookie idCookie = new Cookie("userId", Integer.toString(userLogin.getId()));
                     idCookie.setMaxAge(60 * 60 * 24 * 30);
                     response.addCookie(idCookie);
-                    int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userId));
+                    int countProduct = cartDAO.getTotalRows(cartDAO.getCartIdByUserId(userLogin.getId()));
                     request.getSession().setAttribute("cartCount", countProduct);
+                    request.getSession().setAttribute("userCurrent", userLogin);
                     request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
                 } else {
                     request.setAttribute("msg", "User name or password is incorrect");

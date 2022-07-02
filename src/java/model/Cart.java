@@ -21,7 +21,7 @@ public class Cart {
     }
 
     public double getTotalCostCart() {
-        this.totalCostCart = 0;
+        totalCostCart = 0;
         for (Item item : cart) {
             totalCostCart += item.getTotalCost();
         }
