@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.admin;
 
 import DAO.HistoryDAO;
-import DAO.UserDAO;
+import controller.HistoryServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -13,21 +13,16 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import model.History;
-import model.User;
 
 /**
  *
  * @author HHPC
  */
-@MultipartConfig
-public class HistoryServlet extends HttpServlet {
+public class HistoryAdminServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +41,10 @@ public class HistoryServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HistoryServlet</title>");            
+            out.println("<title>Servlet HistoryAdmin</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HistoryServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet HistoryAdmin at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,23 +62,25 @@ public class HistoryServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
+        String from = null, to = null;
+        if (request.getParameter("history-admin-from") != null){
+            from = request.getParameter("history-admin-from");
+        }
+        if (request.getParameter("history-admin-to") != null){
+            to = request.getParameter("history-admin-to");
+        }
+         try {
             HistoryDAO historyDAO = new HistoryDAO();
-            int userId = getUserId(request, response);
-            ArrayList<History> histories = historyDAO.getProductsHistories(userId);
-            int totalOrder = historyDAO.getTotalOrderAllowUser(userId);
-            double totalCostOrder = Math.round(historyDAO.getTotalCostAllowUser(userId) * 100.0) / 100.0;
-            request.setAttribute("totalOrder", totalOrder);
-            request.setAttribute("totalCostOrder", totalCostOrder);
+            ArrayList<History> histories = historyDAO.getHistories(from, to);
             if (histories.isEmpty()) {
-                request.setAttribute("msg", "You have not purchased any products yet!");
+                request.setAttribute("msg", "Do not have history!");
             } else {
+                historyDAO.getProductsHistories(histories);
                 request.setAttribute("histories", histories);
-
             }
-            request.getRequestDispatcher("history.jsp").forward(request, response);
+            request.getRequestDispatcher("historyAdmin.jsp").forward(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(HistoryServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HistoryAdminServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -98,31 +95,7 @@ public class HistoryServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        int userId = getUserId(request, response);
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUserById(userId);
-        if (request.getParameter("newName") != null) {
-            String newName = request.getParameter("newName");
-            user.setName(newName);
-        } else {
-            Part filePart = request.getPart("newAvatar");
-            String realPath = request.getServletContext().getRealPath("/static/images/avatar");
-            System.out.println(filePart);
-            String fileName = null;
-            String avatar = "";
-            if (!filePart.getSubmittedFileName().isEmpty()) {
-                fileName = filePart.getSubmittedFileName();
-                avatar = "./static/images/avatar/" + fileName;
-                user.setAvatar(avatar);
-                filePart.write(realPath + "\\" + fileName);
-            }
-        }
-        if (userDAO.updateUser(user)) {
-            request.getSession().setAttribute("userCurrent", user);
-            response.sendRedirect("history");
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -130,18 +103,6 @@ public class HistoryServlet extends HttpServlet {
      *
      * @return a String containing servlet description
      */
-    public int getUserId(HttpServletRequest req, HttpServletResponse res){
-        int userId = -1;
-            Cookie[] cookies = req.getCookies();
-            
-            for (Cookie cooky : cookies) {
-                if (cooky.getName().equals("userId")) {
-                    userId = Integer.parseInt(cooky.getValue());
-                    break;
-                }
-            }
-            return userId;
-    }
     @Override
     public String getServletInfo() {
         return "Short description";

@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author HHPC
  */
-public class Booking implements Comparable<Date>{
+public class Booking{
     
     private int bookingId;
     private String bookingPhone, bookingName, bookingService, bookingDate, bookingNote;
@@ -123,14 +123,6 @@ public class Booking implements Comparable<Date>{
         return "Booking{" + "bookingPhone=" + bookingPhone + ", bookingName=" + bookingName + ", bookingService=" + bookingService + ", bookingDate=" + getBookingDate() + ", bookingNote=" + bookingNote + '}';
     }
 
-    public int compareTo() {
-        return new Date().compareTo(getDate());
-    }
-
-    @Override
-    public int compareTo(Date o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     
 }

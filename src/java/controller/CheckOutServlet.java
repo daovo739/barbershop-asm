@@ -154,7 +154,7 @@ public class CheckOutServlet extends HttpServlet {
             totalCostHistory +=feeShipping;
             History history = new History(userId,checkoutEmail, checkoutPhone,checkoutName, checkoutCity, checkoutDistrict, checkoutWard, checkoutAddress, checkoutDelivery, checkoutMethod,  totalCostHistory);
             for (Item item : cart.getCart()) {
-                history.getProductIdList().put(item.getProduct(), item.getQuantity());
+                history.getProductsList().put(item.getProduct(), item.getQuantity());
             }
             request.getSession().setAttribute("historyConfirm", history);
             request.getSession().setAttribute("cartConfirm", cart);

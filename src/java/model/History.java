@@ -6,6 +6,7 @@ package model;
 import DAO.ProductsDAO;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +17,8 @@ import java.util.HashMap;
 public class History {
 
     private int historyId, userId, productId,  quantity;
-    private HashMap<Product, Integer> productIdList;
+    private HashMap<Product, Integer> productsList;
+    User user;
     private String email, phone, name, city, district, ward, address, deliveryMethod, paymentMethod;
     private double totalCostHistory;
     private String createAt;
@@ -33,12 +35,11 @@ public class History {
         this.deliveryMethod = deliveryMethod;
         this.paymentMethod = paymentMethod;
         this.totalCostHistory = totalCostHistory;
-        this.productIdList = new HashMap<>();
+        this.productsList = new HashMap<>();
         setCreateAt();
     }
 
     public History(int historyId, int userId,  Timestamp date, String email, String phone, String name, String city, String district, String ward, String address, String deliveryMethod, String paymentMethod, double totalCostHistory) throws SQLException {
-        ProductsDAO productsDAO = new ProductsDAO();
         this.historyId = historyId;
         this.userId = userId;
         this.email = email;
@@ -51,10 +52,19 @@ public class History {
         this.deliveryMethod = deliveryMethod;
         this.paymentMethod = paymentMethod;
         this.totalCostHistory = totalCostHistory;
-        this.productIdList = new HashMap<>();
+        this.productsList = new HashMap<>();
         setCreateAtTimestamp(date);
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    
     public int getProductId() {
         return productId;
     }
@@ -72,12 +82,12 @@ public class History {
     }
 
     
-    public HashMap<Product, Integer> getProductIdList() {
-        return productIdList;
+    public HashMap<Product, Integer> getProductsList() {
+        return productsList;
     }
 
-    public void setProductIdList(HashMap<Product, Integer> productIdList) {
-        this.productIdList = productIdList;
+    public void setProductsList(HashMap<Product, Integer> productsList) {
+        this.productsList = productsList;
     }
 
     
@@ -90,7 +100,7 @@ public class History {
     }
 
     public double getTotalCostHistory() {
-        return totalCostHistory;
+        return formatPrice(totalCostHistory);
     }
 
     public void setTotalCostHistory(double totalCostHistory) {
@@ -194,9 +204,14 @@ public class History {
         String newBookingDate = formatter.format(date);
         this.createAt = newBookingDate;
     }
+    
+     public double formatPrice(double price){
+        DecimalFormat df=new DecimalFormat("#.##");
+        return Double.parseDouble(df.format(price));
+    }
     @Override
     public String toString() {
-        return "History{" + "historyId=" + historyId + ", userId=" + userId + ", productIdList=" + productIdList + ", email=" + email + ", phone=" + phone + ", name=" + name + ", city=" + city + ", district=" + district + ", ward=" + ward + ", address=" + address + ", deliveryMethod=" + deliveryMethod + ", paymentMethod=" + paymentMethod + ", totalCostHistory=" + totalCostHistory + ", createAt=" + createAt + '}';
+        return "History{" + "historyId=" + historyId + ", userId=" + userId + ", productIdList=" + productsList + ", email=" + email + ", phone=" + phone + ", name=" + name + ", city=" + city + ", district=" + district + ", ward=" + ward + ", address=" + address + ", deliveryMethod=" + deliveryMethod + ", paymentMethod=" + paymentMethod + ", totalCostHistory=" + totalCostHistory + ", createAt=" + createAt + '}';
     }
 
     

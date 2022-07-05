@@ -64,7 +64,7 @@
                                 </div>
                                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item text-capitalize" href="checkout">View your cart</a></li>
-                                    <li><a class="dropdown-item text-capitalize" href="history">order history</a></li>
+                                    <li><a class="dropdown-item text-capitalize" href="history">profile | order history</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="btn btn-danger nav-link d-flex text-white " href="logout" ><span class="material-symbols-outlined">

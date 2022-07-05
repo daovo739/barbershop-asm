@@ -152,7 +152,8 @@ public class CartDAO {
                     + "        <h5 class=\"offcanvas-title\" id=\"offcanvasWithBothOptionsLabel\">Your Cart</h5>\n"
                     + "        <button type=\"button\" class=\"btn-close text-reset btn-close-white\" data-bs-dismiss=\"offcanvas\" aria-label=\"Close\"></button>\n"
                     + "    </div>\n"
-                    + "        <div class=\"offcanvas-body h-25   cart-list\" style=\"overflow-x: hidden\"><h2 class=\"text-white\">Your cart is empty. Shopping now!</h2>\n"
+                    + "        <div class=\"offcanvas-body h-25  d-flex flex-column justify-content-center align-items-center cart-list\" style=\"overflow-x: hidden\"><h2 class=\"text-white\">Your cart is empty</h2>\n"
+                    + "                                <a class=\"btn btn-primary\" type=\"button\" href=\"products\">Shopping Now!</a>\n"
                     + "        </div>";
         } else {
             data = "<div class=\"offcanvas-header\">\n"

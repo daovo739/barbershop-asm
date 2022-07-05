@@ -90,7 +90,7 @@ public class HistoryDAO {
     public ArrayList<History> getHistoriesAllowUserId(int userId){
         ArrayList<History> histories = new ArrayList<>();
          try {
-             String sql = "select * from history where user_id = " + userId;
+             String sql = "select * from history where user_id = " + userId +" order by date desc";
              rs = stm.executeQuery(sql);
              while(rs.next()){
                  int historyId = rs.getInt(1);
@@ -103,8 +103,8 @@ public class HistoryDAO {
                  String district = rs.getString(9);
                  String ward = rs.getString(10);
                  String address = rs.getString(11);
-                 String deliveryMethod = rs.getString(12);
-                 String paymentMethod = rs.getString(13);
+                 String deliveryMethod = rs.getString(13);
+                 String paymentMethod = rs.getString(12);
                  histories.add(new History(historyId, userId, date, email, phone, name, city, district, ward, address, deliveryMethod, paymentMethod, totalCostHistory));
              }
              return histories;
@@ -121,18 +121,100 @@ public class HistoryDAO {
             try {
                 ProductsDAO productsDAO = new ProductsDAO();
                 int historyId = history.getHistoryId();
-                sql = "select history.history_id, product_id, quantity from  history  inner join history_contains on history.history_id = history_contains.history_id where user_id =  " + userId + " and history_id = " +historyId;
+                sql = "select history.history_id, product_id, quantity from  history  inner join history_contains on history.history_id = history_contains.history_id where user_id =  " + userId + " and history.history_id = " +historyId;
                 rs = stm.executeQuery(sql);
                 while(rs.next()){
-                    int productId = rs.getInt(1);
-                    int quantity = rs.getInt(2);
-                    history.getProductIdList().put(productsDAO.getProductById(productId), quantity);
-                }
+                    int productId = rs.getInt(2);
+                    int quantity = rs.getInt(3);
+                    history.getProductsList().put(productsDAO.getProductById(productId), quantity);
+                }   
             } catch (SQLException ex) {
                 Logger.getLogger(HistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-         return histories;
-        
+         return histories;  
+    }
+    
+    public int getTotalOrderAllowUser(int userId){
+         try {
+             String sql = "select count(*) from history where user_id = " + userId;
+             rs = stm.executeQuery(sql);
+             rs.next();
+             return rs.getInt(1);
+         } catch (SQLException ex) {
+             Logger.getLogger(HistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+             return 0 ;
+         }
+    }
+    
+     public double getTotalCostAllowUser(int userId){
+         try {
+             String sql = "select sum(totalCost) from history where user_id = " + userId;
+             rs = stm.executeQuery(sql);
+             rs.next();
+             return rs.getDouble(1);
+         } catch (SQLException ex) {
+             Logger.getLogger(HistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+             return 0 ;
+         }
+    }
+     
+     public ArrayList<History> getHistories(String from, String to){
+         String sql;
+         if (from == null && to == null){
+             sql = "select * from history order by history_id desc";
+         }else if (from.isEmpty() && !to.isEmpty()){
+             sql = "select * from history where date <= '" + to +"' order by history_id desc";
+         }else  if (!from.isEmpty() && to.isEmpty()){
+             sql = "select * from history where date >= '" + from +"' order by history_id desc";
+         }else{
+             sql = "select * from history where date >= '" + from + "' and date <= '" + to +"' order by history_id desc";
+         }
+        ArrayList<History> histories = new ArrayList<>();
+         try {
+             
+             rs = stm.executeQuery(sql);
+             while(rs.next()){
+                 int historyId = rs.getInt(1);
+                 int userId = rs.getInt(2);
+                 Timestamp date= rs.getTimestamp(3);
+                 double totalCostHistory = rs.getDouble(4);
+                 String email = rs.getString(5);
+                 String phone = rs.getString(6);
+                 String name = rs.getString(7);
+                 String city = rs.getString(8);
+                 String district = rs.getString(9);
+                 String ward = rs.getString(10);
+                 String address = rs.getString(11);
+                 String deliveryMethod = rs.getString(13);
+                 String paymentMethod = rs.getString(12);
+                 History history = new History(historyId, userId, date, email, phone, name, city, district, ward, address, deliveryMethod, paymentMethod, totalCostHistory);
+                 history.setUser(new UserDAO().getUserById(userId));
+                 histories.add(history);
+             }
+             return histories;
+         } catch (SQLException ex) {
+             Logger.getLogger(HistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+         }
+         return null;
+    }
+     
+    public void getProductsHistories(ArrayList<History> histories){
+        String sql;
+        for (History history : histories) {
+            try {
+                ProductsDAO productsDAO = new ProductsDAO();
+                int historyId = history.getHistoryId();
+                sql = "select history.history_id, product_id, quantity from  history  inner join history_contains on history.history_id = history_contains.history_id where history.history_id = " +historyId;
+                rs = stm.executeQuery(sql);
+                while(rs.next()){
+                    int productId = rs.getInt(2);
+                    int quantity = rs.getInt(3);
+                    history.getProductsList().put(productsDAO.getProductById(productId), quantity);
+                }   
+            } catch (SQLException ex) {
+                Logger.getLogger(HistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

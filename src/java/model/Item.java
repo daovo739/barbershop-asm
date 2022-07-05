@@ -24,6 +24,12 @@ public class Item {
         this.product = productsDAO.getProductById(productId);
     }
 
+    public Item(Product product, int quantity ) {
+        this.quantity = quantity;
+        this.product = product;
+    }
+
+    
     public int getUserId() {
         return userId;
     }

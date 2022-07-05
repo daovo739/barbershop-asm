@@ -2,27 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.admin;
 
-import DAO.UserDAO;
+import DAO.DashBoardDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLDecoder;
-import java.util.Collection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-import model.User;
+import javax.servlet.http.HttpSession;
+import model.DashBoard;
+import model.Item;
 
 /**
  *
  * @author HHPC
  */
-@MultipartConfig
-public class RegisterServlet extends HttpServlet {
+public class DashBoardAdminServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +41,10 @@ public class RegisterServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");            
+            out.println("<title>Servlet DashBoardAdminServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DashBoardAdminServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,10 +59,36 @@ public class RegisterServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+    public boolean checkRole(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("role_admin") == null || !session.getAttribute("role_admin").equals("admin")) {
+            return false;
+        }
+        return true;
+    }
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+         if (!checkRole(request, response)) {
+            response.sendRedirect("GetProductsHomeServlet");
+        }else{
+             try {
+            DashBoardDAO dashBoardDAO = new DashBoardDAO();
+            int userCount = dashBoardDAO.getNumberUsers();
+            int orderCount = dashBoardDAO.getNumberHistories();
+            double totalCost =  Math.round(dashBoardDAO.getTotalCost() * 100.0) / 100.0;
+            Item bestSale = dashBoardDAO.getBestSeller();
+            DashBoard dashboard = new DashBoard(userCount, orderCount, totalCost, bestSale);
+            request.setAttribute("dashboard", dashboard);
+            request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+            } catch (SQLException ex) {
+                Logger.getLogger(DashBoardAdminServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        
     }
 
     /**
@@ -76,43 +102,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
-        String realPath = request.getServletContext().getRealPath("/static/images/avatar");  
-        Part filePart = request.getPart("avatar");
-        String fileName = null;
-        String avatar = "";
-        if (!filePart.getSubmittedFileName().isEmpty()) {
-            fileName = filePart.getSubmittedFileName();
-            avatar = "./static/images/avatar/" + fileName;
-        } else {
-            int random = (int) ((Math.random() * (5 - 1)) + 1);
-            fileName = "default_avatar_" + Integer.toString(random) + ".jpg";
-            avatar = "./static/images/avatar/default_avatar_" + Integer.toString(random) + ".jpg";
-        }
-
-        if (!password.equals(confirmPassword)) {
-            request.setAttribute("msg", "Invalid register, try again");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-        } else {
-            User user = new User(name, email, userName, password, avatar);
-            System.out.println(user.toString());
-            UserDAO userDAO = new UserDAO();
-            if (!userDAO.registerUser(user)) {
-                request.setAttribute("msg", "Username is exsited");
-                request.getRequestDispatcher("register.jsp").forward(request, response);
-            } else {
-                filePart.write(realPath + "\\" + fileName);
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            }
-
-        }
-
+        processRequest(request, response);
     }
 
     /**

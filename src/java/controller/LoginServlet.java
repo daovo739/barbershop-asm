@@ -83,8 +83,8 @@ public class LoginServlet extends HttpServlet {
             String userName = request.getParameter("userName");
             String password = request.getParameter("password");
             if (userName.equals("admin") && password.equals("admin")) {
-                request.getSession().setAttribute("role_admin", "true");
-                response.sendRedirect("productsAdmin");
+                request.getSession().setAttribute("role_admin", "admin");
+                response.sendRedirect("dashboardAdmin");
             } else {
                 User user = new User(userName, password);
                 User userLogin = userDAO.checkLogin(user);

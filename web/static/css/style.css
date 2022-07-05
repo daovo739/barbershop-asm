@@ -46,10 +46,10 @@ main, nav, footer{
     background: transparent;
     border: 3px solid #fff;
     padding: 20px;
-             color: #fff;
-         text-decoration: none;
-         text-transform: uppercase;
-         letter-spacing: 1px;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     transition: all .3s ease;
 }
 
@@ -205,3 +205,46 @@ transform: scale(1.2);
   padding-bottom: 5px;
 }
  
+/*PROFILE*/
+.edit-profile-btn{
+    background: transparent;
+    transition: all .3s ease;
+}
+
+.edit-profile-btn:hover{
+    background: transparent;
+    color: #3AB0FF;
+}
+
+.profile-img{
+    position: relative
+}
+
+.edit-profile-btn_img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 100%;
+    width: 100%;
+    font-weight: bold;
+    font-size: 18px;
+    background: transparent;
+    transition: all .3s ease;
+    opacity: 0;
+}
+
+.profile-img:hover .edit-profile-btn_img{
+    background: rgba(0,0,0,0.4);
+    opacity: 1;
+}
+
+/*ACCORDITION*/
+.accordion-button{
+    transition: all .3s ease;
+}
+
+.accordion-button:hover{
+    background: #083868;
+    color: #fff;
+}

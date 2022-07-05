@@ -32,10 +32,19 @@ public class BookingDAO {
         stm = conn.createStatement();
     }
     
-    public ArrayList<Booking>  getBookings(){
+    public ArrayList<Booking>  getBookings(String filter, String today){
+        String sql = null;
+        if(filter == null) {
+            sql = "SELECT * FROM booking order by booking_date asc";
+        } else {
+            if (filter.equalsIgnoreCase("completed")) {
+                sql = "SELECT * FROM booking where booking_date < '" + today + "' order by booking_date asc";
+            } else if (filter.equalsIgnoreCase("uncompleted")) {
+                sql = "SELECT * FROM booking where booking_date >= '" + today + "' order by booking_date asc";
+            }
+        }
         try {
             ArrayList<Booking> bookings = new ArrayList<>();
-            String sql = "SELECT * FROM booking order by booking_date asc";
             rs = stm.executeQuery(sql);
             while(rs.next()){
                 int bookingid = rs.getInt(1);

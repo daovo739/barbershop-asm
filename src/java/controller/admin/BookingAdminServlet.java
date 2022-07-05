@@ -9,6 +9,7 @@ import com.sun.source.tree.Tree;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -83,60 +84,23 @@ public class BookingAdminServlet extends HttpServlet {
         if (!checkRole(request, response)) {
             response.sendRedirect("GetProductsHomeServlet");
         } else {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
+            Date date = new Date();  
+            String today =formatter.format(date);  
+            String filter = null;
+            if (request.getParameter("filter") != null) {
+                  filter = request.getParameter("filter");
+            }
             try {
                 BookingDAO bookingDAO = new BookingDAO();
-                ArrayList<Booking> bookings = bookingDAO.getBookings();
+                ArrayList<Booking> bookings = bookingDAO.getBookings(filter, today);
                 if (!bookings.isEmpty()) {
-                    TreeMap<String, ArrayList<Booking>> bookingMap = classifyBooking(bookings);
-                    Date today = new Date();
-                    if (request.getParameter("filter") != null) {
-                        String filter = request.getParameter("filter");
-                        if (filter.equalsIgnoreCase("completed")) {
-                            for (String key : bookingMap.keySet()) {
-                                Iterator<Booking> itr = bookingMap.get(key).iterator();
-                                while (itr.hasNext()) {
-                                    Booking booking = itr.next();
-                                    if (booking.compareTo() < 0) {
-                                        itr.remove();
-                                    }
-
-                                }
-                            }
-
-                        } else {
-                            for (String key : bookingMap.keySet()) {
-                                Iterator<Booking> itr = bookingMap.get(key).iterator();
-                                while (itr.hasNext()) {
-                                    Booking booking = itr.next();
-                                    if (booking.compareTo() >= 0) {
-                                        itr.remove();
-                                    }
-                                }
-                            }
-                        }
-                        Iterator<Map.Entry<String, ArrayList<Booking>>> it = bookingMap.entrySet().iterator();
-
-                        while (it.hasNext()) {
-                            Map.Entry<String, ArrayList<Booking>> set = (Map.Entry<String, ArrayList<Booking>>) it.next();
-                            if (set.getValue().isEmpty()) {
-                                it.remove();
-                            }
-//                        Collections.sort(set.getValue(), new Comparator<Booking>() {
-//                            @Override
-//                            public int compare(Booking o1, Booking o2) {
-//                                return o1.getDate().compareTo(o2.getDate());
-//                            }
-//                        });
-                        }
-                    }
+                    TreeMap<String, ArrayList<Booking>> bookingMap = classifyBooking(bookings);         
                     request.setAttribute("bookings", bookingMap);
-                    request.getRequestDispatcher("bookingAdmin.jsp").forward(request, response);
-
                 } else {
                     request.setAttribute("msgBooking", "The booking list is empty");
-                    request.getRequestDispatcher("bookingAdmin.jsp").forward(request, response);
                 }
-
+                request.getRequestDispatcher("bookingAdmin.jsp").forward(request, response);
             } catch (SQLException ex) {
                 Logger.getLogger(BookingAdminServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -195,13 +159,11 @@ public class BookingAdminServlet extends HttpServlet {
 
         for (Booking booking : bookings) {
             String date = booking.getBookingDate().split(" ")[0];
-            System.out.println(date);
             if (!bookingMap.containsKey(date)) {
                 bookingMap.put(date, new ArrayList<Booking>());
             }
         }
 
-        System.out.println(bookingMap);
         for (String key : bookingMap.keySet()) {
             for (Booking booking : bookings) {
                 String dateBooking = booking.getBookingDate().split(" ")[0];

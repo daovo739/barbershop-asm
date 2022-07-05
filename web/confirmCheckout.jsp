@@ -107,7 +107,7 @@
                                         <div id="paypal" class="w-75"></div>
                                     </div>
                                 </c:if>
-                                <a href="GetProductsHomeServlet" class="btn btn-danger text-center mt-2 w-100 text-uppercase" style="padding: 6px; font-size: 20px; letter-spacing: 2px">Cancel</a>
+                                <a href="checkout" class="btn btn-danger text-center mt-2 w-100 text-uppercase" style="padding: 6px; font-size: 20px; letter-spacing: 2px">Cancel</a>
                             </div>
                     </div>             
                 </form>

@@ -60,6 +60,14 @@
         <servlet-name>HistoryServlet</servlet-name>
         <servlet-class>controller.HistoryServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>HistoryAdmin</servlet-name>
+        <servlet-class>controller.admin.HistoryAdminServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DashBoardAdminServlet</servlet-name>
+        <servlet-class>controller.admin.DashBoardAdminServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GetProductsHomeServlet</servlet-name>
         <url-pattern>/GetProductsHomeServlet</url-pattern>
@@ -120,8 +128,16 @@
         <servlet-name>HistoryServlet</servlet-name>
         <url-pattern>/history</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HistoryAdmin</servlet-name>
+        <url-pattern>/historyAdmin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DashBoardAdminServlet</servlet-name>
+        <url-pattern>/dashboardAdmin</url-pattern>
+    </servlet-mapping>
     <session-config>
-        <session-timeout>30</session-timeout>
+        <session-timeout>120</session-timeout>
     </session-config>
     <welcome-file-list>
         <welcome-file>LoadDataServlet</welcome-file>
