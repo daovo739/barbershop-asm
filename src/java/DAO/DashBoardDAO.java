@@ -5,8 +5,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Booking;
 import model.Item;
 
 /*
@@ -52,9 +55,29 @@ public class DashBoardDAO {
         }
     }
     
-     public double getTotalCost(){
+     public int getNumberHBooking(){
         try {
-            String sql = "select sum(totalCost) from history ";
+            String sql = "select count(*) from booking";
+            rs = stm.executeQuery(sql);
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DashBoardDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+    }
+     public double getTotalCost(String from, String to){
+         String sql;
+           if (from == null && to == null){
+             sql = "select sum(totalCost) from history";
+         }else if (from.isEmpty() && !to.isEmpty()){
+             sql = "select sum(totalCost) from history where date <= '" + to +"'";
+         }else  if (!from.isEmpty() && to.isEmpty()){
+             sql = "select sum(totalCost) from history where date >= '" + to +"'";
+         }else{
+             sql = "select sum(totalCost) from history where date >= '" + from + "' and date <= '" + to +"'";
+         }
+        try {
             rs = stm.executeQuery(sql);
             rs.next();
             return rs.getDouble(1);
@@ -78,5 +101,26 @@ public class DashBoardDAO {
             Logger.getLogger(DashBoardDAO.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+      
+      public ArrayList<Booking>  getBookings(String from, String to){
+        String sql = "SELECT * FROM booking where booking_date >= '" + from + "' and booking_date < '" +to+ "' order by booking_date asc";
+        try {
+            ArrayList<Booking> bookings = new ArrayList<>();
+            rs = stm.executeQuery(sql);
+            while(rs.next()){
+                int bookingid = rs.getInt(1);
+                String bookingEmail = rs.getString(2);
+                String bookingName = rs.getString(3);
+                String bookingService = rs.getString(4);
+                Timestamp timestamp = rs.getTimestamp(5);
+                String bookingNote = rs.getString(6);
+                bookings.add(new Booking(bookingid,bookingEmail, bookingName, bookingService, timestamp, bookingNote));
+            }  
+            return bookings;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

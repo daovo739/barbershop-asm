@@ -4,28 +4,18 @@
  */
 package controller.admin;
 
-import DAO.HistoryDAO;
-import controller.HistoryServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.History;
 
 /**
  *
  * @author HHPC
  */
-public class HistoryAdminServlet extends HttpServlet {
+public class LogoutAdminSerlvet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +34,10 @@ public class HistoryAdminServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HistoryAdmin</title>");            
+            out.println("<title>Servlet LogoutAdminSerlvet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HistoryAdmin at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet LogoutAdminSerlvet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,35 +55,8 @@ public class HistoryAdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String from = null, to = null;
-        if (request.getParameter("history-admin-from") != null) {
-            from = request.getParameter("history-admin-from");
-        }
-        if (request.getParameter("history-admin-to") != null) {
-            to = request.getParameter("history-admin-to");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Calendar c = Calendar.getInstance();
-            try {
-                c.setTime(sdf.parse(to));
-            } catch (ParseException ex) {
-                Logger.getLogger(HistoryAdminServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            c.add(Calendar.DATE, 1);
-            to = sdf.format(c.getTime());
-        }
-        try {
-            HistoryDAO historyDAO = new HistoryDAO();
-            ArrayList<History> histories = historyDAO.getHistories(from, to);
-            if (histories.isEmpty()) {
-                request.setAttribute("msg", "Do not have history!");
-            } else {
-                historyDAO.getProductsHistories(histories);
-                request.setAttribute("histories", histories);
-            }
-            request.getRequestDispatcher("historyAdmin.jsp").forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(HistoryAdminServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        request.getSession().removeAttribute("role_admin");
+        request.getRequestDispatcher("GetProductsHomeServlet").forward(request, response);
     }
 
     /**

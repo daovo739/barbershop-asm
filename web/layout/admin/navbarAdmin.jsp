@@ -59,7 +59,7 @@
                     <img src="https://github.com/daovo739.png" alt="" width="40" height="40" class="rounded-circle me-2">
                     <strong>ADMIN</strong>
                 </a>
-                <button class="btn btn-danger">Sign Out</button>
+                <a class="btn btn-danger text-decoration-none" href="logoutAdmin" type="button">Sign Out</a>
             </div>
         </div>
         

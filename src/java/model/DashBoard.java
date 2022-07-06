@@ -9,16 +9,27 @@ package model;
  * @author HHPC
  */
 public class DashBoard {
-    private int userCount, historyCount;
+    private int userCount, historyCount, bookingCount;
     private double totalCost;
     private Item bestSale;
 
-    public DashBoard(int userCount, int historyCount, double totalCost, Item bestSale) {
+    public DashBoard(int userCount, int historyCount, int bookingCount, double totalCost, Item bestSale) {
         this.userCount = userCount;
         this.historyCount = historyCount;
+        this.bookingCount = bookingCount;
         this.totalCost = totalCost;
         this.bestSale = bestSale;
     }
+
+    public int getBookingCount() {
+        return bookingCount;
+    }
+
+    public void setBookingCount(int bookingCount) {
+        this.bookingCount = bookingCount;
+    }
+
+    
 
     public int getUserCount() {
         return userCount;

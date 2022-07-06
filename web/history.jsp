@@ -23,7 +23,7 @@
         <main>
             <section class="container" style="min-height: 80vh">
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-4" >
                         <div class="d-flex flex-column text-white border" style="padding: 32px 12px; margin-top: 96px">
                             <div class="d-flex justify-content-center align-items-center profile-img w-75" style="margin: 0 auto">
                                 <img src="${userCurrent.getAvatar()}" alt="alt" class="img-fluid w-100" />

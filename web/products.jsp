@@ -19,7 +19,7 @@
     <body>
         <jsp:include page="layout/navbar.jsp"/>
         <main >
-            <section class="container; border: none">
+            <section class="container; border: none"; style="min-height: 75vh">
                 <div class="row">
                     <div class="col-lg-2 filters" style="border-right: 1px solid #FCFDFB" >
                         <div class="input-group mb-3  bg-dark text-white">

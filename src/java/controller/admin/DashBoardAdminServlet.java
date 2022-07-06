@@ -8,6 +8,13 @@ import DAO.DashBoardDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -15,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Booking;
 import model.DashBoard;
 import model.Item;
 
@@ -71,19 +79,43 @@ public class DashBoardAdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         if (!checkRole(request, response)) {
+        if (!checkRole(request, response)) {
             response.sendRedirect("GetProductsHomeServlet");
-        }else{
-             try {
-            DashBoardDAO dashBoardDAO = new DashBoardDAO();
-            int userCount = dashBoardDAO.getNumberUsers();
-            int orderCount = dashBoardDAO.getNumberHistories();
-            double totalCost =  Math.round(dashBoardDAO.getTotalCost() * 100.0) / 100.0;
-            Item bestSale = dashBoardDAO.getBestSeller();
-            DashBoard dashboard = new DashBoard(userCount, orderCount, totalCost, bestSale);
-            request.setAttribute("dashboard", dashboard);
+        } else {
+            try {
+                 String from = null, to = null;
+                if (request.getParameter("dashboard-from") != null) {
+                    from = request.getParameter("dashboard-from");
+                }
+                if (request.getParameter("dashboard-to") != null) {
+                    to = request.getParameter("dashboard-to");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(sdf.parse(to));
+                    c.add(Calendar.DATE, 1);
+                    to = sdf.format(c.getTime());
+                }
+
+                String today = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE);
+                String tomorrow = LocalDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_DATE);
+                DashBoardDAO dashBoardDAO = new DashBoardDAO();
+                int userCount = dashBoardDAO.getNumberUsers();
+                int orderCount = dashBoardDAO.getNumberHistories();
+                int bookingCount = dashBoardDAO.getNumberHBooking();
+                double totalCost = Math.round(dashBoardDAO.getTotalCost(from, to) * 100.0) / 100.0;
+                Item bestSale = dashBoardDAO.getBestSeller();
+                ArrayList<Booking> bookings = dashBoardDAO.getBookings(today, tomorrow);
+                DashBoard dashboard = new DashBoard(userCount, orderCount, bookingCount, totalCost, bestSale);
+                request.setAttribute("dashboard", dashboard);
+                if (bookings.isEmpty()) {
+                    request.setAttribute("msg", "No bookings today and tomorrow");
+                } else {
+                    request.setAttribute("bookings", bookings);
+            }
             request.getRequestDispatcher("dashboard.jsp").forward(request, response);
             } catch (SQLException ex) {
+                Logger.getLogger(DashBoardAdminServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
                 Logger.getLogger(DashBoardAdminServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

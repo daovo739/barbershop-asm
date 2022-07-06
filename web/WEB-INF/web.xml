@@ -68,6 +68,10 @@
         <servlet-name>DashBoardAdminServlet</servlet-name>
         <servlet-class>controller.admin.DashBoardAdminServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LogoutAdminSerlvet</servlet-name>
+        <servlet-class>controller.admin.LogoutAdminSerlvet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GetProductsHomeServlet</servlet-name>
         <url-pattern>/GetProductsHomeServlet</url-pattern>
@@ -135,6 +139,10 @@
     <servlet-mapping>
         <servlet-name>DashBoardAdminServlet</servlet-name>
         <url-pattern>/dashboardAdmin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutAdminSerlvet</servlet-name>
+        <url-pattern>/logoutAdmin</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>120</session-timeout>

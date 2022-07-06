@@ -24,12 +24,12 @@
                 <h1 class="section-title bg-white text-dark"style="padding: 0; margin-bottom: 0">History Orders</h1>
                 <form action="historyAdmin" method="GET" class="d-flex  align-items-end w-50 mb-3">
                         <div class="d-flex flex-column me-3">
-                            <label for="">From</label>
-                            <input type="date" class="form-control" name="history-admin-from" id="history-admin">
+                            <label for="history-admin-from">From</label>
+                            <input type="date" class="form-control" name="history-admin-from" id="history-admin-from">
                         </div>
                         <div class="d-flex flex-column">
-                            <label for="">To</label>
-                            <input type="date" class="form-control" name="history-admin-to" id="history-admin">
+                            <label for="history-admin-to">To</label>
+                            <input type="date" class="form-control" name="history-admin-to" id="history-admin-to">
                         </div>
                         <div class="d-flex align-items-center ms-3">
                             <input type="submit" class="btn btn-primary text-decoration-none me-2" />
