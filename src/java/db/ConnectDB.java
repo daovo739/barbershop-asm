@@ -15,10 +15,13 @@ import java.util.logging.Logger;
  * @author HHPC
  */
 public class ConnectDB {
-    private String user = "vvd";
-    private String password = "Vandaone123";
-//    private String url = "jdbc:sqlserver://localhost;trustServerCertificate=true;databaseName=barbershop-asm";
-    String url = "jdbc:sqlserver://barbershop.database.windows.net:1433;database=barbershop;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net";
+    private String user="sa";
+    private String password="123";
+        private String url = "jdbc:sqlserver://localhost;trustServerCertificate=true;databaseName=barbershop-asm";
+
+//    private String user = "vvd";
+//    private String password = "Vandaone123";
+//    String url = "jdbc:sqlserver://barbershop.database.windows.net:1433;database=barbershop;encrypt=true;trustServerCertificate=true;hostNameInCertificate=*.database.windows.net";
     private Connection conn;
 
     public ConnectDB() {

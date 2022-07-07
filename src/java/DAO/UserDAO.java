@@ -49,7 +49,7 @@ public class UserDAO {
     public User checkLogin(User user) {
         try {
             User userReturn = null;
-            String sql = "Select * from users where userName = ? and password = ?";
+            String sql = "Select * from users where userName = ? COLLATE Latin1_General_CS_AS  and password = ? COLLATE Latin1_General_CS_AS ";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getPassword());
