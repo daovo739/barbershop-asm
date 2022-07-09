@@ -51,9 +51,9 @@
                                 <div class="${classCard}" >
                                     <div class="w-75 d-flex justify-content-between" style="margin: 0 auto">
                                         <c:forEach items="${products}" var="product" begin="${count}" end="${count+2}">
-                                            <div class="col-lg-4 d-flex align-items-stretch" style="width: 14rem">
+                                            <div class="col-lg-4 d-flex align-items-stretch" style="width: 14rem; height: 300px">
                                                 <a href="product?id=${product.getId()}" class="card bg-dark text-white " style="width:100%; text-decoration: none;">
-                                                    <img src="${product.getImgLink()}" class="card-img-top img-thumbnail" alt="..." >
+                                                    <img src="${product.getImgLink()}" class="card-img-top img-thumbnail h-100" alt="..." >
                                                     <div class="card-body">
                                                         <h6 class="card-subtitle mb-2 text-muted text-center text-capitalize" style="font-size: 10px">${product.getBrand()}</h6>
                                                         <h5 class="card-title text-capitalize text-center" style="font-size: 12px">${product.getName()}</h5>
