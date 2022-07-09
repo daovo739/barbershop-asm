@@ -15,7 +15,7 @@
         <link type="text/css" rel="stylesheet" href="./static/css/style.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <script src="https://www.paypal.com/sdk/js?client-id=AdznrYMJFJhdO3BsR0iQBUHNVyl5hZlQJqJ5UHA_xW9f9rlj2dEt4S9AFiKqvA_nZuAeJ5jdHMikrO25"></script>
+        <script src="https://www.paypal.com/sdk/js?client-id=AdznrYMJFJhdO3BsR0iQBUHNVyl5hZlQJqJ5UHA_xW9f9rlj2dEt4S9AFiKqvA_nZuAeJ5jdHMikrO25&disable-funding=credit,card"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
@@ -104,7 +104,7 @@
                                 </c:if>
                                 <c:if test="${historyConfirm.getPaymentMethod() == 'paypal'}">
                                     <div class="d-flex text-white mt-3 justify-content-center ">
-                                        <div id="paypal" class="w-75"></div>
+                                        <div id="paypal" class="w-100"></div>
                                     </div>
                                 </c:if>
                                 <a href="checkout" class="btn btn-danger text-center mt-2 w-100 text-uppercase" style="padding: 6px; font-size: 20px; letter-spacing: 2px">Cancel</a>
@@ -112,20 +112,20 @@
                     </div>             
                 </form>
                 </c:if>
-                
+
             </section>
             <form action="confirm-checkout" method="POST" style="visibility: hidden" id="form-hidden"></form>
         </main>
         <jsp:include page="layout/footer.jsp"/>
-       
-        
+
+
         <script>
             const totalCost = +document.querySelector(".totalCost").getAttribute("data-price");
            const paypalButtonsComponent = paypal.Buttons({
               // optional styling for buttons
               // https://developer.paypal.com/docs/checkout/standard/customize/buttons-style-guide/
               style: {
-                color: "gold",
+                color: "blue",
                 shape: "rect",
                 layout: "vertical"
               },
