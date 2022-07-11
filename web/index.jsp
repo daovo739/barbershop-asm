@@ -173,19 +173,24 @@
             const toast = new bootstrap.Toast(toastLiveExample);
             
             const booking =  () => {
-                const phone = document.querySelector("#booking-phone").value;
-                const name = document.querySelector("#booking-name").value;
-                const service = document.querySelector("#booking-service").value;
-                const date = document.querySelector("#booking-date").value;
+                const phone = document.querySelector("#booking-phone");
+                const name = document.querySelector("#booking-name");
+                const service = document.querySelector("#booking-service");
+                const date = document.querySelector("#booking-date");
                 let time;
                 document.querySelectorAll(".booking-time-input").forEach((item) => {
                     if (item.checked){
                         time = item.value;
                     }
                 });
-                const note = document.querySelector("#booking-note").value || "";
-
-                if (!phone || !name || !service || !date || !time || !phone.match(/^(84|\+84|0)\d{9,10}$/g)){
+                const note = document.querySelector("#booking-note");
+                let phoneText = phone.value;
+                let nameText = name.value;
+                let serviceText = service.value;
+                let dateText = date.value;
+                let noteText = note.value || "";
+                
+                if (!phoneText || !nameText || !serviceText || !dateText || !time || !phoneText.match(/^(84|\+84|0)\d{9,10}$/g)){
                     document.querySelector(".toast-body-index").textContent = "Please fill input correct!";            
                     toast.show();
                     console.log("empty");
@@ -194,16 +199,24 @@
                     url: "/barbershop/bookingAdmin",
                     type: "POST",
                     data: {
-                        "booking-phone": phone,
-                        "booking-name": name,
-                        "booking-service": service,
-                        "booking-date": date,
+                        "booking-phone": phoneText,
+                        "booking-name": nameText,
+                        "booking-service": serviceText,
+                        "booking-date": dateText,
                         "booking-time": time,
-                        "booking-note": note
+                        "booking-note": noteText
                     },
                     success: function (results) {
                         document.querySelector(".toast-body-index").textContent = results;            
                         toast.show();
+                        phone.value = "";
+                        name.value= "";
+                        service.value = "";
+                        date.value="";
+                        note.value="";
+                        document.querySelectorAll(".booking-time-input").forEach((item) => {
+                    item.checked = false;
+                });
                         console.log(results);
                     },
                     error: function (error) {
