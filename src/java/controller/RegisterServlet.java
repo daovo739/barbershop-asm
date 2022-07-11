@@ -91,9 +91,7 @@ public class RegisterServlet extends HttpServlet {
             fileName = filePart.getSubmittedFileName();
             avatar = "./static/images/avatar/" + fileName;
         } else {
-            int random = (int) ((Math.random() * (5 - 1)) + 1);
-            fileName = "default_avatar_" + Integer.toString(random) + ".jpg";
-            avatar = "./static/images/avatar/default_avatar_" + Integer.toString(random) + ".jpg";
+            avatar = "https://i0.wp.com/tleliteracy.com/wp-content/uploads/2017/02/default-avatar.png?fit=300%2C300&ssl=1";
         }
 
         if (!password.equals(confirmPassword)) {
@@ -107,7 +105,10 @@ public class RegisterServlet extends HttpServlet {
                 request.setAttribute("msg", "Username is exsited");
                 request.getRequestDispatcher("register.jsp").forward(request, response);
             } else {
-                filePart.write(realPath + "\\" + fileName);
+                if (fileName != null){
+                    filePart.write(realPath + "\\" + fileName);
+                }
+                
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
 
