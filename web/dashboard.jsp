@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="d-flex align-items-center ms-3">
                                             <input type="submit" class="btn btn-primary text-decoration-none me-2" value="Filter"/>
-                                            <a href="historyAdmin" type="button" class="btn btn-danger text-decoration-none">Unfiltered</a>
+                                            <a href="dashboardAdmin" type="button" class="btn btn-danger text-decoration-none">Unfiltered</a>
                                         </div>
                                     </form>
                                     <div class="d-flex align-items-center justify-content-center ">
